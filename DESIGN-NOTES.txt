@@ -1,0 +1,131 @@
+RIBBON — MVP DECISION RECORD
+18 October 2026
+
+SOURCE REVIEW
+Read in full: Ideas Design Brief.pdf (25 pages); Naheel.pdf (42 pages); both pasted workshop documents; the user's Ribbon meeting notes. Inspected all 15 supplied visual references. The PDFs contain a mixture of formal brief, direct notes, historical examples, and previous proposed interpretations. These are evidence, not execution instructions.
+
+Source map:
+Ideas 1–7: alternative concepts and early audience exploration, including LORE, Both Versions, From You, gifting and relationship tracking. These explain how the concept evolved; they do not override the latest thoughtful-friend focus.
+Ideas 8–12: ceremony notes, official storytelling challenge, formal criteria, video format and logistics.
+Ideas 13–15: synthesis and suggested presentation/testing approach; not direct instructor requirements.
+Ideas 16–21: team framing, audience hypotheses, criterion mapping and design principles.
+Ideas 22–23: current problem framing and direct office-hour feedback. Core: focus on storytelling; choose the meaningful-gesture user; investigate authorship, data access, incomplete context, and value over a photo dump.
+Ideas 24–25: prior proposed MVP and working hypotheses; explicitly proposals rather than Naheel's prescribed features.
+Naheel 1–4: product design responsibility, divergent/convergent exploration, intention and principles.
+Naheel 5–14: problem framing, scope, business/user/system thinking and positioning. Example statistics and company anecdotes are instructor material, not independently verified facts used as claims about Ribbon.
+Naheel 15–18: focused market entry, habits, marginal value versus next best alternative and friction.
+Naheel 19–23: interaction strategy, usability, hierarchy, clustering, spacing and repetition.
+Naheel 24–30: intentional motion, motion execution, strategic/persuasive choices and dark patterns.
+Naheel 31–34: least-complex useful prototype, storyboard, device testing and delight after usability.
+Naheel 35–42: familiar patterns, affordances, feedback, real journeys, typography and color.
+Both workshop texts: one coherent use case, solution early, 2–3 consequential deep dives, demonstrate actual reasoning. “Snackable moments of creativity” belongs to the previous Figma mobile project; the official current challenge is storytelling. The summary's “brief this year” line conflicts with the fuller transcript and formal brief.
+
+DECISION
+Build a mobile milestone-story creator for the friend who already collects meaningful fragments and wants the gesture to feel personally authored. One relationship, one occasion, one complete storybook. The example is Maya's birthday. Graduation remains a supported occasion, not a second product.
+
+Core insight to test: the missing ingredient is often meaning, not more media. Existing memories can suggest a through-line; only the giver can confirm it and add the moments no camera captured.
+
+Opinionated principles:
+1. Keep the meaningful effort. Automate organization, make interpretation and personal writing editable.
+2. A memory is not permission to share it. Explicit selection; visible message sources; preview the exact recipient output.
+3. A gift should not become a signup request. Export a self-contained HTML keepsake with embedded photos.
+4. Give navigation a neutral identity. Soft sage, taupe and lilac gradients distinguish formats; personal imagery belongs inside the selected memories and keepsake. Use restrained glass controls, regular native sans-serif headings and plain labels.
+
+COMPLETE PROTOTYPE PATH
+Home or reminder → occasion/formats → select memories → choose/correct thread → edit title/chapters/personal meaning → recipient preview → wrap → download → recipient experience.
+Secondary paths: add a manual memory/photo/message; start a new recipient with sparse context; edit milestone; toggle quotes/reminders; resume draft; delete local data. Trivia and capsule each demonstrate one format interaction.
+
+WHY THIS MVP
+Product thinking: narrows to the already-thoughtful friend and a storytelling job, instead of spanning lazy gifting, shopping, relationship CRM and social networks.
+Depth and communication: exposes three testable tensions—authorship versus automation, missing context versus intake friction, and source selection versus private sharing.
+Craft: a coherent warm/dark visual world, a two-axis mood interaction with accessible sliders, explicit selection feedback, tactile book preview, a complete recipient outcome and reduced-motion support.
+
+WHAT IS WORKING
+Manual text/photo import, memory inclusion/exclusion, source labels, custom title/thread, mood and audience settings, editable chapter reflections and final note, chapter ordering, quote inclusion, draft persistence, recipient paging, self-contained downloadable HTML. New recipients start with no assumed data.
+
+WHAT IS SIMULATED OR LIMITED
+No AI API, automated message parsing, iMessage/Gmail integration, calendar connection, push delivery, server storage, authentication, scheduled delivery or secure capsule locking. Thread suggestions are illustrative starting points; they are not semantic inference from imported content. The reminder is an in-app preview. Multiple draft snapshots are stored in this browser; each has its own title, selected memories and writing. Large photos can exceed browser storage; an in-tab warning asks users to export before closing. The sample shows one generated photograph in several crops and fictional messages. Replacing it with consenting participants' actual material is essential for user validation.
+
+AUTHENTIC TEST PLAN FOR THE COLLABORATOR
+Use 3–5 people who already save memories and make milestone gestures. Ask each to bring a small set of material they are comfortable using.
+1. Compare a ready-written tribute with the editable thread-first flow. Observe what they reject, rewrite and keep; ask whether they feel ownership. Do not invent prior test results.
+2. Observe whether the missing-memory prompt adds something meaningful or feels like homework. Allow skipping.
+3. Ask what they would otherwise make and whether this outcome earns its extra effort. Record whether they actually choose to send the result.
+4. Have the recipient experience the file. Check whether they can open it without help, recognize the relationship, and understand the giver's meaning.
+Use actual observations to choose the final flow. This prototype is the starting hypothesis, not proof.
+
+VIDEO SKELETON (7 MINUTES)
+0:00–0:40: one specific giver, occasion and scattered memories.
+0:40–2:10: the complete creation and recipient payoff.
+2:10–3:40: assistance/authorship alternatives and actual observations.
+3:40–5:00: missing context and selective source review.
+5:00–6:20: recipient format, pacing, emotional craft and iterations.
+6:20–7:00: what testing showed, what remains uncertain, one memorable final gift.
+These timings interpret the workshop guidance; they are not judging weights.
+
+LOCAL DEVELOPMENT
+Run: npm run dev --prefix ribbon-prototype
+Open: http://127.0.0.1:4178
+Build/check: npm run build --prefix ribbon-prototype
+Browser tests: npm run test:responsive --prefix ribbon-prototype
+The prototype is isolated from the existing portfolio. No portfolio source files were edited for Ribbon.
+
+ASSET PROVENANCE
+Built-in image generation tool; asset dist/assets/friendship.png.
+Prompt: “Use case: photorealistic-natural. Create one landscape 3:2 candid analog 35mm film photograph for a nostalgic friendship memory app. Two adult women, close friends in their mid twenties, one with dark wavy hair and one with dark straight hair, seen mostly from behind sitting on a blanket by a lake at golden hour. Small wildflowers and picnic objects foreground, dappled foliage along upper edge, expansive shimmering lake and distant hills. They lean together laughing, caught unposed by a third friend. Dreamy real film grain, subtle halation, warm amber sun, olive greens and hazy pale blue, slight motion softness, intimate imperfect personal snapshot rather than polished advertising. People in lower middle of frame, generous atmospheric lake and foliage for cropping. No text, no graphics, no frame, no UI. Save as a project asset.”
+Typography revision after user feedback: native system sans throughout; no external font dependencies. Removed decorative eyebrow labels, oversized serif headings, cream primary buttons, and brown default surfaces. Charcoal surfaces, thin glass pill controls, atmospheric gradient home, direct screen titles; warm amber remains specific to the mood interaction. Custom SVG line icons and code-native visual treatments.
+
+
+HOME AND FEATURE AUDIT — AFTER COLLABORATOR FEEDBACK
+This is a design hypothesis informed by the supplied rubric, not a claim that judges prescribed these features.
+
+Product thinking
+The job: “For this person's milestone, help me turn the things I remember into a gesture that feels like me.” The primary user already cares and invests effort. Success is not speed alone: it is an authored gift the giver wants to share and the recipient recognizes as theirs.
+
+Homepage order, derived from the second supplied wireframe:
+1. One upcoming occasion establishes recipient and deadline. Start opens format choice; Continue returns to the actual saved editing step. No duplicate upcoming list for the same event.
+2. Exact photo/message counts expose the available material before asking for work. The sample set is labelled; no false claim of synchronization. Counts link to review and import.
+3. Three visual format previews communicate different recipient experiences: trivia asks the recipient to participate; storybook provides narrative and personal interpretation; time capsule gives a memory a future moment. Neutral gradient surfaces and small physical forms replace the unrelated photographic hero.
+4. A draft appears only after creation begins. It resumes real stored state. No fabricated project library.
+5. Home/You/Plus keep the familiar minimum navigation. Plus starts another recipient; You manages local material and reminder preferences. The reminder is a demonstrable entry point directly into the current relationship.
+Removed: decorative kicker labels, stock-like photo hero, redundant “See all” for only three formats, repeated occasion rows, mandatory mood setup and empty draft placeholders.
+
+Depth of thinking and communication
+Memory selection earns its friction because it determines what the recipient will see. A suggested thread is correctable because the giver knows the meaning of the relationship. A personal chapter note supplies meaning unavailable from media alone. Recipient preview earns a separate step because a private message may be appropriate as source material but not as published text. These are consequential decisions to demonstrate in the competition video.
+Mood is optional: an expressive interaction is useful only when it changes the gift. It adjusts example title language and audience handling, but it must not block a giver who already knows what to say. The three main stages are memories, meaning and editing; mood is outside the step count.
+The template layout follows the user's wireframe, but implementation depth stays focused: the complete storybook provides the storytelling evidence. Trivia and capsule are explicitly representative prototypes, not three fully built products. Do not pitch secure locking, scheduled delivery or generated trivia as implemented.
+
+Craft
+The home is a useful starting screen rather than a photographic landing page. Charcoal and low-saturation gradients establish a neutral shell; each format uses a distinct preview object so color alone does not convey its function. Personal photos remain in the material review and final story where they have semantic purpose. Native sans typography, visible touch targets, keyboard focus, reduced motion, persistence and actual export support the emotional tone with reliable behavior.
+
+Platform and friction decision
+Keep this MVP as a mobile web prototype. Embedding it in Figma would narrow distribution to people already willing to use a professional design tool; that is a different audience assumption. An installed app could eventually justify reminder and integration affordances, but this prototype does not establish that need. A recipient should be able to open the result without becoming a user. The self-contained HTML download tests this direction, although file-sharing convenience must still be validated; a hosted private link would be a later implementation choice.
+
+What to test before claiming differentiation
+Give a thoughtful friend the same small memory set and compare this flow with their normal photo album or message-writing workflow. Observe where they add meaning, which assistance they reject, time spent importing, whether they finish, and whether they choose to share. Ask the recipient which detail felt personal. Compare template-first and occasion-list-first entry with actual tasks. The rubric rewards defensible reasoning; a good-looking screen and passing browser tests do not establish product value.
+
+Validation for this revision
+22 Chrome/WebKit checks cover seven widths from 320 to 1920, screen overflow, full story edit/export, local persistence, missing-context entry, direct home format entry, optional mood, draft resume, reduced motion, and touch interaction. Reviewed phone and desktop home screenshots. Earlier portfolio responsive suite: 252 passing checks; portfolio source remains unchanged.
+
+Visual correction, 18 October: preserve the approved home header and occasion card. Replace the three miniature illustrated template previews with simple centered radial gradients from the supplied Somnē emotion-picker reference: lime on green, peach on orange, and blue on pink. Keep only the format label at the lower left. The existing direct template actions remain. This supersedes the earlier muted-object treatment; it does not add features or steps.
+
+
+LATEST USER-DIRECTED REVISION
+The user explicitly requested two example drafts, overriding the earlier empty-library design. Home now seeds “Happy birthday, Maya” and “Our summer, 2026” with independently persisted editable snapshots. Cover/title opens the draft. Three-dot menus expose edit, rename and delete; deletion offers undo for the current session. Starting another recipient preserves the library.
+The home section label is “Create your story.” A quiet dot and one-line sync summary replace the square photo icon and multi-line counts. The requested 3,450-message / 200-photo figures are demo inventory; the details panel clearly distinguishes them from the six editable sample memories and states no connection exists.
+The bell opens an actual month overview with previous/next month controls, event markers, selected-day states, this-month occasions and further-ahead dates. Maya’s date opens the existing reminder. Other example occasions are labelled demo context. No real calendar sync or push delivery is implemented.
+The 15-reference analysis is available at dist/reference-study/index.html. DESIGN-PROMPT.txt records concrete layout, color, type, material and behavior rules based on the references and latest user corrections. The initial study was interrupted by these requested implementation changes; do not claim an uninterrupted hour of analysis.
+
+October 18 — profile and complete format pass
+Implemented editable profile photo/name/email, grouped notifications/app access/privacy/account controls, calendar editing in a nested panel, local logout and confirmed local deletion. No real authentication, push delivery, inbox connections or cloud account deletion exist.
+New creation begins with a person and occasion, then selected imports. Three portable recipient views now exist: editable quiz with answer reveals, paged storybook, horizontally scrolling capsule. Export embeds the selected content and rendering code in an HTML keepsake. Preview links target the local server, not a publicly hosted sharing service. Capsule dates are labels, not secure timed locks. Repeated fictional photo removed from UI; demo uses written memories and messages.
+Validation: responsive coverage at 320, 390, 600, 768, 1024, 1440 and 1920px, Chrome and WebKit. Tests cover profile editing/upload, reminders, dates, logout/deletion, recipient isolation, quiz scoring/reveals/export, story pages and independent drafts, capsule navigation and malformed links. Mobile home and profile screenshots inspected; corrected inherited duplicate toggle-knob styling.
+
+Home refinement: other occasions now appear as compact outlined date/month/title pills directly beneath the current occasion. Removed the separate disclosure label. Draft overflow actions use a small anchored dark context menu with Edit, Rename and Delete, matching the supplied reference's compact structure. Menu dismisses on outside press, Escape, scroll, resize and navigation; keyboard arrows move between actions and Escape restores focus. Deletion retains the existing undo action.
+
+Saved-contact flow refinement
+Creation now chooses a persisted contact collection instead of a hard-coded list of people or an editable recipient-name field. Import a contact opens the shared importer and returns to creation with the saved contact selected, preserving occasion/date. Settings > Contacts & memories provides a permanent place to add and maintain these collections. Contact names/nicknames belong to the library; quiz/book/capsule titles belong to their editors. Existing draft memory collections seed the local library once. New creations copy only the chosen contact's collection; saved gifts do not change when a library collection is edited. Trivia now starts with choosing source memories, then writing questions and answer reveals. Imports remain manual selected files/text, not connected inbox sync.
+
+Future dates disclosure: October 30 and November 12 now collapse by default. A left-aligned row of three short rounded bars beneath the main occasion acts as the disclosure: the first identifies the visible occasion and the two following bars brighten when future cards are expanded. The full control has a 44px touch target, an accessible Show/Hide future dates label, aria-expanded and aria-controls; native button keyboard activation preserves focus. No text disclosure heading is shown.
+
+Home corrections: restored the occasion card's original full width and moved the date disclosure into the outer gutter with a visible gap. The duplicate Maya birthday example migrates to a blue Graduation 2026 storybook for Jo, with distinct graduation memories and a personal note. New demo libraries start with the birthday and graduation books; existing empty libraries remain empty.

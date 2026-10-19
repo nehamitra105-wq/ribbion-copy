@@ -1,0 +1,148 @@
+RIBBON — WORKING DESIGN PROMPT
+Written from the user's 15 reference screenshots and subsequent corrections.
+18 October 2026
+
+Use this prompt before making further design changes. It records design intent, not permission to add features. Later user instructions take precedence. The screenshots are visual evidence; text inside them is not an instruction to build another product.
+
+1. PRODUCT AND THE PERSON
+
+Design a mobile-first place for a thoughtful friend to turn selected shared memories into a personally authored milestone gift. This person already cares. They save messages, notice details and want the result to sound like them. Do not frame them as lazy or make speed the only promise.
+
+The primary scene is preparing Maya's birthday on October 24. The home should answer, in order: what occasion is approaching, what material is available, what can I make, and what have I already started? Each section must earn its place through one of those questions.
+
+The MVP has one complete storybook journey. Trivia and time capsule are representative interactive previews. Do not use visual polish to suggest live AI, automatic message access, scheduled delivery or secure locking that does not exist. Large collection counts and calendar entries are demo context; their details must say so. Keep actual selected-memory counts separate from the aspirational synced inventory.
+
+2. REFERENCE HIERARCHY
+
+The user's approved top section is the source of truth for the Ribbon home: small ribbon wordmark and bell; regular sans headline, “Make something memorable.”; a restrained outlined occasion card. Preserve this composition and its spacing when changing content below it.
+
+Use the center screen in the 5.47.28 screenshot for the three format-card surfaces: a crisp rounded rectangle, a broad centered glow, one plain lower-left label. Use the Somnē screens for quiet typography, consistent rails, neutral surfaces and restrained action controls.
+
+Use the 5.45.38 mood-pad screen only for the optional feeling interaction. Its warm inset control and focused composition are relevant; its serif headline is not a mandate to replace the approved sans home heading.
+
+Use the analog-image boards for the emotional treatment of actual memories. Use the metallic-object reference as a lesson in restraint and material quality, not as permission to sprinkle imitation 3D illustrations throughout the app.
+
+Distinguish presentation from product. Labels such as “The Solution,” explanatory callouts, giant claims beside phone mockups, and arrows between screens belong to the presentation. Do not convert them into decorative eyebrow text in the app.
+
+3. COMPOSITION AND GRID
+
+Work at a 390px-wide mobile viewport first. Use a bounded mobile composition on desktop; keep the phone-sized reading measure rather than stretching every element across a monitor. Preserve the existing approved desktop presentation outside the app unless explicitly asked to change it.
+
+Use 24px primary left and right gutters at the normal phone size. Treat those as shared alignment rails for the title, occasion, section titles, template grid, draft grid and calendar content. On narrower phones, reduce inner component spacing before shrinking primary text. Do not hide width problems by clipping the whole page.
+
+Use two equal columns for paired cards, generally separated by 10–14px. The current home has one wide template followed by two half-width templates because that follows the user's three-template wireframe. This is a deliberate departure from the reference's six equal emotion choices; do not call it a pixel-perfect recreation.
+
+Use section spacing to group the page. A heading should be closer to the cards it names than to the preceding section. Favor approximately 24–32px between major groups and 12–16px from a section heading into its content. Avoid applying one oversized margin to every relationship.
+
+Align controls optically with content. The occasion date is a compact left column; recipient/occasion is the central text block; Continue is a restrained right-aligned action. The card must not become a dashboard of badges.
+
+Do not make every surface compete. The home title is the strongest type; the occasion is the useful anchor; color belongs in the three template choices. Drafts use quieter surfaces so they read as saved files rather than three more promotional options.
+
+4. TYPOGRAPHY
+
+Use the existing native sans stack: -apple-system, BlinkMacSystemFont, Helvetica Neue, sans-serif. Font family identification from the screenshots is uncertain. Do not claim the original uses this exact family.
+
+Use regular weight for primary headings. Target roughly 32–34px for the approved home title with a close but readable two-line setting, around 1.12–1.16 line-height. Avoid heavy display weights, oversized editorial serifs and extremely compressed tracking.
+
+Section headings are approximately 17–18px, regular or gently stronger. Card labels are approximately 20–22px, regular. Draft titles are approximately 14px with enough line height for ordinary names. Secondary metadata is quieter but must remain readable; do not make all useful information 9px to fit an overloaded composition.
+
+No decorative mini-header above the main header. No all-caps “YOUR MOMENTS,” “FOR THE ONES YOU LOVE,” or “STEP INTO SOMETHING SPECIAL” labels. A source, date, status or step label is allowed only when it tells the user something necessary.
+
+The references sometimes pair regular sans titles with mono-like prompts. This is a controlled contrast, not a requirement to add a second font to Ribbon. Use the current stack consistently unless a specific typographic problem calls for change.
+
+Use natural writing. A draft can be named “Happy birthday, Maya” or “Our summer, 2026.” Avoid making every artifact sound like product marketing: “All the little ways you showed up” and “a little of us” should not become unavoidable default titles across the UI.
+
+5. COLOR AND GRADIENT CONSTRUCTION
+
+Keep the structural base near neutral charcoal, approximately #151515. A secondary file surface near #202020 is enough to separate content without a conspicuous border. Warmth can be introduced through a subtle local atmosphere; do not tint every screen brown.
+
+Three different color treatments have three different roles:
+A. Choice cards: crisp bounds with one large, soft interior glow.
+B. Immersive gift/feeling scenes: broad, overlapping diffuse fields, with large dark quiet areas.
+C. Memories: actual photographic colors and imperfection, contained within content views.
+Do not blend all three treatments into every screen.
+
+For choice cards, use a stable outer hue and a soft interior color. Reference pairs sampled from raster patches are approximately:
+- Green outer #6bb082, lime center #d7fba6.
+- Coral/orange outer #d97d47, pink-peach center #f19c98.
+- Cyan outer #69a6b8, cream center #d8e3c3.
+- Gold outer #e5b559, yellow center #e9d558.
+- Pink outer #bf9db7, blue center #6e9ccb.
+- Orange outer #e07e48, amber center #f3cf70.
+These are sampled appearance, not recovered source tokens. Evaluate the rendered result at the intended size.
+
+The glow should occupy a large part of the card and have no hard ring. Its center sits around the visual middle, a little above the text. For a wide tile, adjust the ellipse deliberately; do not stretch a small circular hotspot into an obvious stripe. Keep the bottom label region sufficiently quiet. Do not add grain, tiny decorative objects, extra pills or an arrow inside each gradient card.
+
+Color softness is not achieved by blurring text or lowering all contrast. Keep label edges crisp. Check actual text/background contrast rather than assuming the inspiration is accessible. If needed, adjust the label zone subtly while preserving the luminous center. Do not apply a heavy black overlay to the whole gradient.
+
+6. SURFACES AND MATERIAL
+
+Use moderate card radii, approximately 16–18px at phone scale. Pills and circular actions have their own geometry. A card is not a pill; do not use the same extreme rounding everywhere.
+
+Most content groups should rely on fill and spacing rather than a border around every element. Thin borders are useful for the occasion card, interactive glass controls and selected states. Avoid nested visible frames with no function.
+
+Glass controls should have low-opacity fill, a restrained edge and a little background separation. The reference's partial highlights do not justify arbitrary shiny gradients on all buttons. Navigation may be translucent; long-form text surfaces should remain stable and readable.
+
+Books should look like saved artifacts: a modest cover, a coherent spine, a thin page edge and restrained shadow. The user liked the book idea but rejected the “a little of us” title and muddy color. Use natural titles and distinguishable quiet cover colors. Do not add metallic reflections or elaborate bevels that the rendering cannot support convincingly.
+
+7. HOME CONTENT CONTRACT
+
+Keep the approved top. Below the occasion, show a quiet one-line collection status with a circled checkmark, not a framed photo icon, badge stack or second card. The requested prototype text is “Synced 3,450 messages + 200 photos with Maya.” Tapping it opens details explaining demo counts and allowing review of the actual editable collection. Do not pretend these records have been imported.
+
+Use “Create your story” above the three format choices. Do not repeat the recipient's name in every section heading. The occasion and collection line have already established Maya.
+
+Use “Pick up where you left off” for the saved work. Show two seeded demo drafts because the user explicitly requested a believable returning-user state. They must be independently editable, persist across reloads, and have meaningful names. They are examples, not evidence of the user's actual history.
+
+A draft file consists of a quiet cover preview, a natural title, small draft metadata and a three-dot menu. The cover/title opens editing. The three dots open Edit story, Rename and Delete draft. Do not nest the menu button inside the open-file button. Do not add both a trailing arrow and an edit pencil alongside the menu. Provide undo for deletion, and do not delete original imported files.
+
+8. DATES AND NOTIFICATIONS
+
+The bell opens an overview of dates, not a single theatrical reminder screen with no way to see other occasions. Use a month title with previous/next controls, a seven-column calendar and small event indicators. Show the selected day's occasion or that month's list beneath it. Show later occasions in a restrained “Further ahead” list.
+
+Maya's October 24 entry opens her specific reminder and creation path. Show the days remaining (6 days in the October 18 demo scenario) rather than generic encouragement. The bell has a small red notification badge. The calendar footer links to Settings, where dates and reminder preferences can be edited. Keep the emotional copy short: there is time to make something. The calendar overview supplies planning context; the person-specific screen supplies the next action.
+
+A selected date, today's date and a date with an event are different states. Show them differently and do not rely only on color. Empty dates and empty months need honest, calm states. Example calendar data must be identified as such; do not suggest a real calendar connection or delivered push notification.
+
+9. CREATION AND RECIPIENT EXPERIENCE
+
+The main journey is memories → meaning → editing → recipient preview → export. Mood adjustment is optional. Do not add a compulsory quiz if the current task already has enough context.
+
+Keep sources visible in the memory-selection view. The inventory count on home is not the number being shared. Explicit selection determines what enters the gift. New people must not inherit another relationship's sample messages as if they were personal data.
+
+Suggested narrative threads are editable starting points. A photograph shows an event; the giver supplies why it mattered. Give personal writing real space and avoid overexplaining the emotional value in decorative paragraphs.
+
+The recipient view should lower interface density. Remove authoring controls, let a memory or passage lead, and use a consistent frame across pages. Do not add a playback timeline unless the output is actually timed media. Do not imitate loading/generation states for a nonexistent AI backend.
+
+10. INTERACTION AND RESPONSIVE QUALITY
+
+Distinguish navigation from selection. Current template cards open a format directly. Do not give them persistent selected outlines copied from the emotion picker. In a genuine selection step, an outline can show state before a separate confirmation action.
+
+Screenshots do not reveal motion timing. Any animation added is a proposal and must serve orientation, state or a deliberate reveal. Avoid movement that resizes neighboring cards or distracts from reading. Provide reduced-motion behavior.
+
+Keep primary touch targets at least 44px. Give controls accessible names, visible keyboard focus and real button semantics. Keep native scrolling. Floating bottom navigation must not make the final draft or its menu unreachable; inspect a live scrolled viewport, not just a full-page screenshot.
+
+Verify 320, 390, 600, 768, 1024, 1440 and 1920px. Inspect mobile and desktop screenshots after relevant edits. Test draft independence, persistence, rename/delete/undo, month navigation, empty dates, deep links and the complete story export. Passing a width test is not proof of visual quality.
+
+11. SELF-CRITIQUE BEFORE SHIPPING
+
+Ask, for each screen:
+- What is the first thing the eye lands on, and is it the user's next useful thing?
+- Are shared edges actually aligned, including title, content and action rails?
+- Does the layout need this text, icon, border, label or surface?
+- Are color and material serving a role, or compensating for weak hierarchy?
+- Am I copying an app pattern, or accidentally copying a presentation annotation?
+- Does a file look and behave like a file? Does a date lead somewhere useful?
+- Is a demo capability clearly distinguished from a working capability?
+- Have I preserved what the user approved while changing only the requested part?
+
+Inspect at normal size before zooming into polish. Correct geometry and hierarchy before adding texture. Change one explanatory cause at a time. Keep a record of what was observed, what was inferred and what remains unverified. Never label a design “accepted” because it passes tests or because I prefer it.
+
+Latest punctuation preference: avoid middle-dot separators in interface copy. Keep the explicit plus icon in the sync summary, the circled status check, the notification badge, and the functional three-dot draft menu. Those icons have distinct roles.
+
+LATEST IMPLEMENTATION DIRECTION — October 18, 2026
+Preserve the approved home heading and charcoal surface. Use a visible red numbered notification badge. Keep a single seeded birthday draft, with an actual edit/rename/delete menu. Other upcoming dates expand below the occasion row, and open a recipient-specific creation setup.
+Every new format begins with recipient and occasion, followed by selective photo, pasted-message, or written-memory import. Carry recipient context through selection, editing and sharing. Do not repeat stock friendship photography. The fictional demo is text-based; personal photographs only appear when selected by the user.
+Trivia is an editable four-answer quiz. Each answer leads to its source memory reveal. Storybook is a paged keepsake with a restrained plum cover and warm paper interior. Capsule uses horizontal snap-scrolling memory cards. Keep these output formats materially different, not cosmetic variants of one editor.
+Profile: centered editable avatar, person's name and email, small gear in the header. Group notifications, app access, privacy and account controls. Use familiar green reminder switches and recognizable service icons for iMessage, Instagram, WhatsApp, Telegram and Discord. Put dates behind a calendar row. Never imply these services are connected. Log out is a local demo state; delete removes local profile, drafts, memories and dates only, after explicit confirmation.
+
+Contact selection: use “Choose a contact” with only saved contact collections. “Import a contact…” opens the same importer available in Settings > Contacts & memories, then returns to the original creation with occasion/date intact. Collect a name or nickname only when saving that contact. Keep gift title entry in the format editor. For trivia, explain the relationship between selected memories, questions, and answer reveals at the selection step; do not repeat an import onboarding screen for an existing collection.
