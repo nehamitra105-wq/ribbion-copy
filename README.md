@@ -2,8 +2,7 @@
 
 Standalone prototype project.
 
-Live prototype: https://ribbon-keepsakes-prototype.kuki1029.chatgpt.site
-
+Live prototype: https://nehamitra105-wq.github.io/ribbion-copy/
 ## Run locally
 
 Run `npm run dev`, then open http://127.0.0.1:4178. If the original preview is already running on that port, stop it first or run `python3 -m http.server 4179 --bind 127.0.0.1 --directory dist`.
