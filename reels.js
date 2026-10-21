@@ -88,7 +88,7 @@ function slideHTML(s,i){
     return `<article class="reel reel-meme" data-i="${i}" data-kind="meme"><img src="assets/constellation/thumbs/${s.photo}.jpg" alt=""><p class="reel-meme-top">${esc(m?.[1]||'')}</p><p class="reel-meme-bottom">${esc(ctx.person)}, ${esc(window.RibbonWeb.data.TIMES[m?.[4]]||'')}</p>${caption('You',`sent over ${m?.[5]||'text'}, framed forever`)}${remove}</article>`;}
   return '';
 }
-function caption(from,text){return `<div class="reel-caption"><span class="reel-avatar" data-tone="${from.charCodeAt(0)%3}">${esc(from[0])}</span><div><strong>${esc(from)}</strong><p>${esc(text)}</p></div></div>`;}
+function caption(from,text){return `<div class="reel-caption"><span class="reel-avatar" data-avatar="${esc(from)}">${esc(from[0])}</span><div><strong>${esc(from)}</strong><p>${esc(text)}</p></div></div>`;}
 function emptySlide(i){return `<article class="reel reel-empty" data-i="${i}" data-kind="empty"><p>Add media and mementos from ${esc(ctx.person)}’s friends!</p><div class="reel-add-grid">
 <button class="wide" data-reels-sheet="photos">${SVG.plus}<span>${SVG.photo}Photos</span></button><button data-reels-sheet="videos">${SVG.plus}<span>${SVG.video}Videos</span></button>
 <button data-reels-sheet="texts">${SVG.plus}<span>${SVG.text}Texts</span></button><button class="wide" data-reels-sheet="friends">${SVG.plus}<span>${SVG.friends}Ask friends</span></button></div></article>`;}
@@ -210,7 +210,7 @@ function onFiles(e){
   if(slides.length){insert(slides);ctx.toast('Uploads play in this tab only. They aren’t saved in the prototype.');}
 }
 function commentsSheet(){const s=reel.slides[active];if(!s)return;
-  openSheet(`<h2>Comments</h2><div class="reels-comments">${(s.comments||[]).map(c=>`<p><span class="reel-avatar" data-tone="${c.name.charCodeAt(0)%3}">${esc(c.name[0])}</span><span><strong>${esc(c.name)}</strong>${esc(c.text)}</span></p>`).join('')||'<p class="reels-empty-note">No comments yet.</p>'}</div><form class="reels-comment-form" data-reels-comment-form><input name="comment" placeholder="Add a comment…" aria-label="Add a comment" autocomplete="off"><button class="reels-primary">Post</button></form>`);
+  openSheet(`<h2>Comments</h2><div class="reels-comments">${(s.comments||[]).map(c=>`<p><span class="reel-avatar" data-avatar="${esc(c.name)}">${esc(c.name[0])}</span><span><strong>${esc(c.name)}</strong>${esc(c.text)}</span></p>`).join('')||'<p class="reels-empty-note">No comments yet.</p>'}</div><form class="reels-comment-form" data-reels-comment-form><input name="comment" placeholder="Add a comment…" aria-label="Add a comment" autocomplete="off"><button class="reels-primary">Post</button></form>`);
   document.querySelector('[data-reels-comment-form]').addEventListener('submit',e=>{e.preventDefault();const input=e.target.comment,text=input.value.trim();if(!text)return;s.comments=[...(s.comments||[]),{name:'You',text}];save();updateRail();commentsSheet();});
 }
 

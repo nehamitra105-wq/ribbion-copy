@@ -1714,12 +1714,13 @@ strong,b,h1,h2,h3,h4,h5,h6,th,dt,legend,optgroup{font-weight:400}
 .ribbon-home .section-head span,.draft-group-head small{font-size:12px}
 .draft-status,.draft-card small,.draft-card p{font-size:max(12px,1em)}
 
-/* Avatars: warm gradient orbs from the occasion tiles (Figma 174:35), white initial */
-.draft-avatar,.avatar,.reel-avatar,.intake-monogram{color:#fff!important;font-family:var(--font-text);font-weight:400;
-  background:radial-gradient(circle at 18% 92%,#ffd3a8 0%,#f5792a 26%,#b8441a 52%,#2a0f05 88%)!important}
-[data-tone="1"]:is(.draft-avatar,.avatar,.reel-avatar,.intake-monogram){background:radial-gradient(circle at 82% 88%,#ffc8a8 0%,#ff7c46 24%,#d44a22 50%,#3a1407 90%)!important}
-[data-tone="2"]:is(.draft-avatar,.avatar,.reel-avatar,.intake-monogram){background:radial-gradient(circle at 30% 8%,#ffdcc0 0%,#ffa462 26%,#e2682a 50%,#4a1c08 90%)!important}
-.reel-avatar{border-color:rgba(255,255,255,.7)}
+/* Avatars (Figma 174:35): the "plain gradient w/ letter" radial fill, white Neue Haas 55 Roman initial;
+   contacts with a picture show it instead (Maya's is the Figma "contact picture"). */
+.draft-avatar,.avatar,.reel-avatar,.intake-monogram,.contact-monogram{display:grid;place-items:center;flex:none;border-radius:50%;border:0;color:#fff!important;font-family:var(--font-text);font-weight:400;letter-spacing:-.011em;
+  background:radial-gradient(156.2% 156.2% at 0% 107.2%,#FCB16F 15.08%,#B35700 29.33%,#080202 73.09%)!important}
+[data-avatar="Maya"]:is(.draft-avatar,.avatar,.reel-avatar,.intake-monogram,.contact-monogram){background:url(assets/avatars/maya.png) center/cover!important;color:transparent!important}
+.settings-row>span.contact-monogram:not(.app-mark){flex:none;width:40px;height:40px;font-size:16px}
+.intake-monogram{font-size:18px}
 
 /* Coming Up swaps in place; clip while the height animates */
 .home-coming-body{overflow:hidden}

@@ -86,7 +86,7 @@ function renderContact(){
   step='contact';speedT=60;dimT=.85;
   document.getElementById('intake-progress').hidden=true;document.getElementById('intake-actions').hidden=true;
   const list=ctx.contacts.length?ctx.contacts:[{id:'maya',name:'Maya',count:6}];
-  swap(`<div class="intake-question"><h1 class="intake-title">Who is this for?</h1><p class="intake-sub">Ribbon looks through the photos and messages you share with them.</p><div class="intake-contacts">${list.map(c=>`<button class="intake-contact" data-intake-contact="${esc(c.name)}"><span class="intake-monogram" data-tone="${c.name.charCodeAt(0)%3}">${esc(c.name[0])}</span><span><strong>${esc(c.name)}</strong><small>${c.count} saved ${c.count===1?'memory':'memories'}</small></span></button>`).join('')}</div><p class="intake-note">Demo: sample photos and messages. No accounts are connected.</p></div>`);
+  swap(`<div class="intake-question"><h1 class="intake-title">Who is this for?</h1><p class="intake-sub">Ribbon looks through the photos and messages you share with them.</p><div class="intake-contacts">${list.map(c=>`<button class="intake-contact" data-intake-contact="${esc(c.name)}"><span class="intake-monogram" data-avatar="${esc(c.name)}">${esc(c.name[0])}</span><span><strong>${esc(c.name)}</strong><small>${c.count} saved ${c.count===1?'memory':'memories'}</small></span></button>`).join('')}</div><p class="intake-note">Demo: sample photos and messages. No accounts are connected.</p></div>`);
 }
 
 function startGathering(name){
