@@ -1936,3 +1936,6 @@ strong,b,h1,h2,h3,h4,h5,h6,th,dt,legend,optgroup{font-weight:400}
   -webkit-mask:url(assets/lock/clock-mask.svg) center/100% 100% no-repeat;mask:url(assets/lock/clock-mask.svg) center/100% 100% no-repeat}
 /* Sunset widget: Figma's 40px background blur under the circle */
 .lock-sunset-blur{position:absolute;left:7px;top:7px;width:58px;height:58px;border-radius:100px;-webkit-backdrop-filter:blur(40px);backdrop-filter:blur(40px)}
+/* Notification time in light (white) text; no focus ring on the notification */
+.lock-note time{color:rgba(255,255,255,.72);mix-blend-mode:normal}
+.lock-screen .lock-note:focus,.lock-screen .lock-note:focus-visible{outline:none}
