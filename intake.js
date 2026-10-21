@@ -138,6 +138,8 @@ const LINE_ICON={
   group:'<svg width="30" height="30" viewBox="0 0 30 30" fill="none" stroke="white" stroke-width="1.875" stroke-linecap="round" stroke-linejoin="round"><circle cx="15" cy="9" r="3.5"/><circle cx="6.5" cy="12" r="2.75"/><circle cx="23.5" cy="12" r="2.75"/><path d="M9 24.5c0-3.31 2.69-6 6-6s6 2.69 6 6M2.5 23c0-2.49 1.79-4.5 4-4.5 1 0 1.9.4 2.6 1.06M27.5 23c0-2.49-1.79-4.5-4-4.5-1 0-1.9.4-2.6 1.06"/></svg>'
 };
 function cardIcon(v){return LINE_ICON[v]||'';}
+// While editing from the overview, Next becomes Done (back to the summary) and Back returns to the overview.
+function setEditLabels(){const next=document.querySelector('[data-intake="next"]'),back=document.querySelector('[data-intake="back"]');if(next)next.innerHTML=editing?`Done ${ctx.icon('check')}`:`Next ${ctx.icon('arrow')}`;if(back)back.textContent=editing?'All answers':'Back';}
 function renderQuestion(){
   step='question';dimT=.45;
   releaseAll();
@@ -153,23 +155,25 @@ function renderQuestion(){
   if(q.type==='chips')body=`<div class="intake-chips">${q.options.map(l=>`<button class="intake-chip ${picked(l)?'selected':''}" data-intake-pick="${esc(l)}" aria-pressed="${picked(l)}">${esc(l)}</button>`).join('')}</div>`;
   if(q.type==='photos')body=`<div class="intake-photos">${shownFor(q).map(id=>{const p=data.PHOTOS.find(x=>x[0]===id),wide=p[1]/p[2]>1.05;return `<button class="intake-photo ${picked(id)?'selected':''}" ${keepAttr(id)} data-intake-pick="${id}" aria-pressed="${picked(id)}"><span class="intake-media ${wide?'wide':''}" data-pull="${id}"><img src="assets/constellation/thumbs/${id}.jpg" alt="">${check}</span><strong>${esc(p[6])}</strong><small>${RELATIVE[p[5]]}</small></button>`;}).join('')}</div>`;
   if(q.type==='moments')body=`<div class="intake-moments">${shownFor(q).map(key=>{const c=collectionOf(key),k=key,l=c.label,ids=c.ids;return `<button class="intake-moment ${picked(k)?'selected':''}" ${keepAttr(k)} data-intake-view="${k}" aria-haspopup="dialog" aria-label="${esc(l)} (${c.tag.toLowerCase()}), ${ids.length} photos${picked(k)?', included':''}. Open to look through it"><span class="intake-fan">${ids.slice(0,3).map(id=>`<span class="intake-media" data-pull="${id}"><img src="assets/constellation/thumbs/${id}.jpg" alt=""></span>`).join('')}${check}</span><strong>${esc(l)}</strong><small>${ids.length} photos</small></button>`;}).join('')}</div>`;
-  if(q.type==='messages')body=`<div class="intake-messages" id="intake-thread">${pickedFirst(shownFor(q),value).map(id=>{const m=data.MESSAGES.find(x=>x[0]===id);return `<button class="intake-bubble ${m[7]==='you'?'from-you':'from-them'} ${picked(id)?'selected':''}" ${keepAttr(id)} aria-label="${m[7]==='you'?'You':esc(person)}: ${esc(m[1])}" data-intake-pick="${id}" data-pull="${id}" aria-pressed="${picked(id)}">${esc(m[1])}${check}</button>`;}).join('')}</div>`;
+  if(q.type==='messages')body=`<div class="intake-messages" id="intake-thread">${shownFor(q).map(id=>{const m=data.MESSAGES.find(x=>x[0]===id);return `<button class="intake-bubble ${m[7]==='you'?'from-you':'from-them'} ${picked(id)?'selected':''}" ${keepAttr(id)} aria-label="${m[7]==='you'?'You':esc(person)}: ${esc(m[1])}" data-intake-pick="${id}" data-pull="${id}" aria-pressed="${picked(id)}">${esc(m[1])}${check}</button>`;}).join('')}</div>`;
   if(q.type==='favorites')body=`<div class="intake-chips">${shownFor(q).map(l=>`<button class="intake-chip ${picked(l)?'selected':''} ${freshSet?.has(l)?'fresh':''}" data-intake-pick="${esc(l)}" aria-pressed="${picked(l)}">${esc(l)}</button>`).join('')}</div><label class="intake-text-field"><span>Or in your own words</span><input id="intake-fav-note" maxlength="80" autocomplete="off" placeholder="e.g. Christopher Nolan fanatic" value="${esc(answers.favoritesNote||'')}"></label><p class="intake-note">Suggestions come from your photos and messages with ${esc(person)}.</p>`;
   if(q.type==='tone')body=tonePad();
-  swap(`<div class="intake-question"><h1 class="intake-title">${esc(q.title.replace('{person}',person))}</h1>${q.multi?`<p class="intake-sub">${q.type==='favorites'?'Pick any that fit, or add your own.':q.type==='moments'?'Tap one to look through it, then include the ones you want.':'Pick as many as you like.'}</p>`:''}${body}${SHUFFLE[q.type]?`<button class="intake-shuffle" data-intake-shuffle>${SHUFFLE_ICON}${SHUFFLE[q.type]}</button>`:''}</div>`,()=>{pullIn();freshSet=null;if(q.type==='tone')bindTone();});
-  updateNext();
+  swap(`<div class="intake-question"><h1 class="intake-title">${esc(q.title.replace('{person}',person))}</h1>${q.multi?`<p class="intake-sub"${q.type==='messages'?' id="intake-vibe" aria-live="polite"':''}>${q.type==='favorites'?'Pick any that fit, or add your own.':q.type==='moments'?'Tap one to look through it, then include the ones you want.':q.type==='messages'?vibeLine():'Pick as many as you like.'}</p>`:''}${body}${SHUFFLE[q.type]?`<button class="intake-shuffle" data-intake-shuffle>${SHUFFLE_ICON}${SHUFFLE[q.type]}</button>`:''}</div>`,()=>{pullIn();freshSet=null;if(q.type==='tone')bindTone();});
+  updateNext();setEditLabels();
 }
 
 function tonePad(){
   const {x,y}=answers.tone;
-  return `<div class="intake-tone"><div class="intake-tone-inner" id="intake-tone-inner"><span class="intake-tone-dots" aria-hidden="true"></span><span class="intake-tone-axis v" aria-hidden="true"></span><span class="intake-tone-axis h" aria-hidden="true"></span>
+  return `<div class="intake-tone"><div class="intake-tone-inner" id="intake-tone-inner" style="${toneGlowVars(x,y)}"><span class="intake-tone-dots" aria-hidden="true"></span><span class="intake-tone-dots lit" aria-hidden="true"></span><span class="intake-tone-axis v" aria-hidden="true"></span><span class="intake-tone-axis h" aria-hidden="true"></span>
 <span class="intake-tone-label top">Heartfelt</span><span class="intake-tone-label bottom">Unserious</span><span class="intake-tone-label left">Personal</span><span class="intake-tone-label right">Shared</span>
 <button class="intake-tone-handle" id="intake-tone-handle" role="slider" aria-label="Mood" aria-valuetext="${toneLabel()}" style="left:${50+x*40}%;top:${50+y*40}%"></button></div></div><p class="intake-tone-readout" id="intake-tone-readout">${toneLabel()}</p>`;
 }
+// The lit dot layer is inset 8% like the dots, so map the handle's position into that box.
+function toneGlowVars(x,y){return `--hx:${((50+x*40-8)/.84).toFixed(2)}%;--hy:${((50+y*40-8)/.84).toFixed(2)}%`;}
 function toneLabel(){const {x,y}=answers.tone;return `${y<-.25?'Heartfelt':y>.25?'Unserious':'Somewhere between heartfelt and silly'} · ${x<-.25?'about them':x>.25?'about the two of you':'a bit of both'}`;}
 function bindTone(){
   const inner=document.getElementById('intake-tone-inner'),handle=document.getElementById('intake-tone-handle');if(!inner)return;
-  const set=(x,y)=>{answers.tone={x:Math.max(-1,Math.min(1,x)),y:Math.max(-1,Math.min(1,y))};handle.style.left=`${50+answers.tone.x*40}%`;handle.style.top=`${50+answers.tone.y*40}%`;handle.setAttribute('aria-valuetext',toneLabel());document.getElementById('intake-tone-readout').textContent=toneLabel();};
+  const set=(x,y)=>{answers.tone={x:Math.max(-1,Math.min(1,x)),y:Math.max(-1,Math.min(1,y))};handle.style.left=`${50+answers.tone.x*40}%`;handle.style.top=`${50+answers.tone.y*40}%`;inner.style.setProperty('--hx',`${((50+answers.tone.x*40-8)/.84).toFixed(2)}%`);inner.style.setProperty('--hy',`${((50+answers.tone.y*40-8)/.84).toFixed(2)}%`);handle.setAttribute('aria-valuetext',toneLabel());document.getElementById('intake-tone-readout').textContent=toneLabel();};
   const fromEvent=e=>{const r=inner.getBoundingClientRect();set(((e.clientX-r.left)/r.width-.5)/.4,((e.clientY-r.top)/r.height-.5)/.4);};
   inner.addEventListener('pointerdown',e=>{try{inner.setPointerCapture(e.pointerId);}catch{}fromEvent(e);inner.classList.add('dragging');});
   inner.addEventListener('pointermove',e=>{if(inner.hasPointerCapture(e.pointerId))fromEvent(e);});
@@ -199,8 +203,28 @@ function recommend(){
   if(y<-.25&&!group)return {format:'capsule',route:'capsuleSetup',title:'time capsule',reason:`It’s heartfelt and just between you two, made to be opened together later.${nod}`};
   return {format:'storybook',route:'storybookTemplates',title:'storybook',reason:`Your memories tell a story, so chapters in your own words will feel the most like you.${nod}`};
 }
+const REVIEW_LABELS={format:'Gift',occasion:'Occasion',favorites:'{person} loves',scope:'Moment',reminds:'Reminds you of them',moments:'Collections',tone:'Vibe',relationship:'You two',messages:'In your words'};
+function answerText(q){
+  const v=answers[q.id];
+  if(q.id==='format')return v==='unsure'?'Not sure yet':TEMPLATE_NAMES[v]||'';
+  if(q.id==='scope')return v==='group'?'Shared with a group':v==='personal'?'Just the two of you':'';
+  if(q.id==='tone')return toneLabel();
+  if(q.id==='favorites')return [...(v||[]),...(answers.favoritesNote?.trim()?[answers.favoritesNote.trim()]:[])].join(', ');
+  if(q.id==='moments')return (v||[]).map(k=>collectionOf(k)?.label).filter(Boolean).join(', ');
+  if(q.id==='reminds')return (v||[]).length?`${v.length} ${v.length===1?'photo':'photos'}`:'';
+  if(q.id==='messages')return (v||[]).length?`${v.length} ${v.length===1?'message':'messages'}`:'';
+  return Array.isArray(v)?v.join(', '):v||'';
+}
+let editing=false;
+function renderReview(){
+  step='review';editing=false;releaseAll();dimT=.25;
+  document.getElementById('intake-progress').hidden=true;document.getElementById('intake-actions').hidden=true;
+  swap(`<div class="intake-question intake-review"><h1 class="intake-title">Change an answer</h1><p class="intake-sub">Tap one to jump back to it.</p>
+<div class="intake-review-list">${QUESTIONS.map((q,i)=>{const a=answerText(q);return `<button class="intake-review-row" data-intake-edit="${i}"><span><small>${esc(REVIEW_LABELS[q.id].replace('{person}',person))}</small><strong class="${a?'':'empty'}">${esc(a||'Not answered')}</strong></span>${ctx.icon('arrow')}</button>`;}).join('')}</div>
+<button class="intake-back solo" data-intake="summary">Back to the summary</button></div>`);
+}
 function renderSummary(){
-  step='summary';releaseAll();dimT=.25;
+  step='summary';editing=false;releaseAll();dimT=.25;
   document.getElementById('intake-progress').hidden=true;document.getElementById('intake-actions').hidden=true;
   const rec=answers.format==='unsure'?recommend():null;
   const title=rec?`We’d make ${esc(person)} a ${esc(rec.title)}`:`${esc(TEMPLATE_NAMES[answers.format])} for ${esc(person)}`;
@@ -208,7 +232,7 @@ function renderSummary(){
   swap(`<div class="intake-question intake-summary"><h1 class="intake-title">${title}</h1>${rec?`<p class="intake-rec">${esc(rec.reason)}</p>`:''}<p class="intake-sub">${esc(answers.occasion)} · ${esc(toneLabel())}</p>
 <div class="intake-summary-strip">${picks.map(id=>`<span class="intake-media" data-pull="${id}"><img src="assets/constellation/thumbs/${id}.jpg" alt=""></span>`).join('')}</div>
 <dl class="intake-summary-list"><div><dt>Moment</dt><dd>${answers.scope==='group'?'Shared with a group':'Just the two of you'}</dd></div>${moments.length?`<div><dt>Collections</dt><dd>${moments.map(esc).join(', ')}</dd></div>`:''}${favs.length?`<div><dt>${esc(person)} loves</dt><dd>${favs.map(esc).join(', ')}</dd></div>`:''}${rel.length?`<div><dt>You two</dt><dd>${rel.map(esc).join(', ')}</dd></div>`:''}${(answers.messages||[]).length?`<div><dt>In your words</dt><dd>${answers.messages.length} ${answers.messages.length===1?'message':'messages'} to quote</dd></div>`:''}</dl>
-<button class="intake-start" data-intake="finish">${rec?`Start the ${esc(rec.cta||rec.title)}`:'Start making it'} ${ctx.icon('arrow')}</button><button class="intake-back solo" data-intake="back">Change an answer</button></div>`,pullIn);
+<button class="intake-start" data-intake="finish">${rec?`Start the ${esc(rec.cta||rec.title)}`:'Start making it'} ${ctx.icon('arrow')}</button><button class="intake-back solo" data-intake="review">Change an answer</button></div>`,pullIn);
 }
 
 /* ---------- collection viewer: swipe through a collection's photos and messages, or see them all ---------- */
@@ -221,9 +245,32 @@ function collectionItems(key){
   return items;
 }
 function openViewer(k,trigger){viewer={key:k,items:collectionItems(k),index:0,mode:'swipe',trigger};drawViewer();}
-function viewerItem(it,full){
-  if(it.type==='photo')return `<figure class="iv-photo"><img src="assets/constellation/${full?'':'thumbs/'}${it.id}.jpg" alt="${esc(it.caption)}"><figcaption><strong>${esc(it.caption)}</strong><small>${esc(it.time)} · ${esc(it.place)}</small></figcaption></figure>`;
-  return `<div class="iv-message"><p class="${it.sender==='you'?'you':''}">${esc(it.text)}</p><small>${it.sender==='you'?'You':esc(person)} · ${esc(it.source)} · ${esc(it.time)}</small></div>`;
+// Swipe view: a looping fan of cards (Figma 192:129). Details sit in each card's top-left corner and the
+// neighbours peek out on either side along an arc, so the next one is always visible underneath.
+function fanCard(it){
+  const meta=(a,b)=>`<div class="iv-meta"><strong>${a}</strong><small>${b}</small></div>`;
+  if(it.type==='photo')return `<img src="assets/constellation/${it.id}.jpg" alt="${esc(it.caption)}" draggable="false">${meta(esc(it.caption),`${esc(it.time)} · ${esc(it.place)}`)}`;
+  return `<div class="iv-card-msg"><p class="${it.sender==='you'?'you':''}">${esc(it.text)}</p></div>${meta(it.sender==='you'?'You':esc(person),`${esc(it.source)} · ${esc(it.time)}`)}`;
+}
+function layoutFan(drag=0){
+  const fan=document.getElementById('iv-fan');if(!fan||!viewer)return;const n=viewer.items.length;
+  fan.querySelectorAll('.iv-card').forEach(card=>{
+    let d=(+card.dataset.i-viewer.index-drag)%n;if(d>n/2)d-=n;if(d<-n/2)d+=n;const a=Math.abs(d);
+    card.style.transform=`rotate(${(d*13).toFixed(2)}deg) scale(${(1-Math.min(a,3)*.05).toFixed(3)})`;
+    card.style.zIndex=String(100-Math.round(a*10));card.style.opacity=a>2.6?'0':'1';
+    card.classList.toggle('is-current',a<.5);card.setAttribute('aria-hidden',a<.5?'false':'true');
+  });
+  document.querySelectorAll('#intake-viewer .iv-dots i').forEach((dot,k)=>dot.classList.toggle('on',k===viewer.index));
+}
+function bindFan(fan){
+  let start=null,moved=false;const w=()=>fan.querySelector('.iv-card')?.offsetWidth||240;
+  fan.addEventListener('pointerdown',e=>{start={x:e.clientX};moved=false;fan.classList.add('dragging');fan.setPointerCapture?.(e.pointerId);});
+  fan.addEventListener('pointermove',e=>{if(!start)return;const dx=e.clientX-start.x;if(Math.abs(dx)>4)moved=true;layoutFan(-dx/(w()*.95));});
+  const end=e=>{if(!start)return;const dx=e.clientX-start.x;start=null;fan.classList.remove('dragging');
+    if(Math.abs(dx)>40)return viewerStep(dx<0?Math.max(1,Math.round(-dx/(w()*.95))):-Math.max(1,Math.round(dx/(w()*.95))));
+    if(!moved){const card=e.target.closest('.iv-card');if(card&&!card.classList.contains('is-current')){viewer.index=+card.dataset.i;return layoutFan();}}
+    layoutFan();};
+  fan.addEventListener('pointerup',end);fan.addEventListener('pointercancel',end);
 }
 function drawViewer(){
   const root=stage.closest('.intake-screen');let el=document.getElementById('intake-viewer');
@@ -233,15 +280,14 @@ function drawViewer(){
   el.innerHTML=`<div class="iv-scrim" data-viewer-close></div><div class="iv-panel">
 <header class="iv-head"><div class="iv-title"><h2>${esc(label)}</h2><small>${nP} ${nP===1?'photo':'photos'} · ${nM} ${nM===1?'message':'messages'}</small></div><button class="iv-close" data-viewer-close aria-label="Close">${ctx.icon('close')}</button></header>
 <div class="iv-modes" role="group" aria-label="View as"><button class="${mode==='swipe'?'active':''}" data-viewer-mode="swipe" aria-pressed="${mode==='swipe'}">Swipe</button><button class="${mode==='all'?'active':''}" data-viewer-mode="all" aria-pressed="${mode==='all'}">All</button></div>
-${mode==='swipe'?`<div class="iv-track" id="iv-track" tabindex="0" aria-label="Swipe through ${esc(label)}">${items.map((it,i)=>`<div class="iv-slide" data-i="${i}" aria-label="${i+1} of ${items.length}">${viewerItem(it,true)}</div>`).join('')}</div>
+${mode==='swipe'?`<div class="iv-fan" id="iv-fan" tabindex="0" role="group" aria-roledescription="carousel" aria-label="Swipe through ${esc(label)}">${items.map((it,i)=>`<div class="iv-card ${it.type}" data-i="${i}" aria-label="${i+1} of ${items.length}">${fanCard(it)}</div>`).join('')}</div>
 <div class="iv-nav"><button data-viewer-step="-1" aria-label="Previous">${ctx.icon('back')}</button><span class="iv-dots" aria-hidden="true">${items.map((_,i)=>`<i class="${i===index?'on':''}"></i>`).join('')}</span><button data-viewer-step="1" aria-label="Next">${ctx.icon('arrow')}</button></div>`
 :`<div class="iv-all">${nP?`<h3 class="iv-all-label">Photos</h3><div class="iv-grid">${items.map((it,i)=>it.type==='photo'?`<button class="iv-cell photo" data-viewer-jump="${i}" aria-label="${esc(it.caption)}"><img src="assets/constellation/thumbs/${it.id}.jpg" alt=""></button>`:'').join('')}</div>`:''}${nM?`<h3 class="iv-all-label">Messages</h3><div class="iv-thread">${items.map((it,i)=>it.type==='message'?`<button class="iv-cell message ${it.sender==='you'?'you':''}" data-viewer-jump="${i}" aria-label="Message: ${esc(it.text)}"><span>${esc(it.text)}</span></button>`:'').join('')}</div>`:''}</div>`}
 <button class="iv-include ${inc?'on':''}" data-viewer-toggle aria-pressed="${inc}">${inc?'Included in the gift ✓':'Include this collection'}</button></div>`;
-  if(mode==='swipe'){const track=document.getElementById('iv-track');requestAnimationFrame(()=>{track.scrollLeft=index*track.clientWidth;});
-    track.addEventListener('scroll',()=>{const i=Math.round(track.scrollLeft/track.clientWidth);if(i!==viewer?.index){viewer.index=i;el.querySelectorAll('.iv-dots i').forEach((d,k)=>d.classList.toggle('on',k===i));}},{passive:true});}
+  if(mode==='swipe'){const fan=document.getElementById('iv-fan');fan.classList.add('dragging');layoutFan();requestAnimationFrame(()=>fan.classList.remove('dragging'));bindFan(fan);}
   el.querySelector('.iv-close').focus({preventScroll:true});
 }
-function viewerStep(d){const track=document.getElementById('iv-track');if(!track)return;const i=Math.max(0,Math.min(viewer.items.length-1,viewer.index+d));track.scrollTo({left:i*track.clientWidth,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});}
+function viewerStep(d){if(!document.getElementById('iv-fan'))return;const n=viewer.items.length;viewer.index=((viewer.index+d)%n+n)%n;layoutFan();}
 function viewerClick(e){
   const t=e.target.closest('[data-viewer-close],[data-viewer-mode],[data-viewer-step],[data-viewer-jump],[data-viewer-toggle]');if(!t)return !!e.target.closest('#intake-viewer');
   if(t.dataset.viewerClose!==undefined)closeViewer();
@@ -283,29 +329,38 @@ function onClick(e){
   const own=e.target.closest('[data-intake-own]');if(own)return chooseOwn(own);
   const view=e.target.closest('[data-intake-view]');if(view)return openViewer(view.dataset.intakeView,view);
   const pick=e.target.closest('[data-intake-pick]');if(pick)return choose(pick.dataset.intakePick,pick);
+  const edit=e.target.closest('[data-intake-edit]');if(edit){editing=true;qIndex=+edit.dataset.intakeEdit;return renderQuestion();}
   const action=e.target.closest('[data-intake]');if(!action)return;
   const a=action.dataset.intake;
   if(a==='begin'){qIndex=0;renderQuestion();}
-  if(a==='next'){if(qIndex<QUESTIONS.length-1){qIndex++;renderQuestion();}else renderSummary();}
-  if(a==='back'){if(step==='summary'){qIndex=QUESTIONS.length-1;renderQuestion();}else if(qIndex>0){qIndex--;renderQuestion();}else if(ctx.preset)location.hash=ctx.back||'gift';else renderContact();}
+  if(a==='next'){if(editing)return renderSummary();if(qIndex<QUESTIONS.length-1){qIndex++;renderQuestion();}else renderSummary();}
+  if(a==='review')return renderReview();
+  if(a==='summary')return renderSummary();
+  if(a==='back'){if(editing)return renderReview();if(step==='summary'){qIndex=QUESTIONS.length-1;renderQuestion();}else if(qIndex>0){qIndex--;renderQuestion();}else if(ctx.preset)location.hash=ctx.back||'gift';else renderContact();}
   if(a==='finish'){const r=answers.format==='unsure'?recommend():null;ctx.finish({person,format:r?r.format:answers.format,route:r?.route,occasion:answers.occasion,picks:answers.reminds||[]});}
 }
 function choose(value,button){
   const q=QUESTIONS[qIndex];
   if(q.type==='tiles'){answers[q.id+'Own']=false;const f=document.getElementById('intake-own-field');if(f)f.hidden=true;content.querySelector('[data-intake-own]')?.classList.remove('selected');}
-  if(q.multi){const list=new Set(answers[q.id]||[]);list.has(value)?list.delete(value):list.add(value);answers[q.id]=[...list];button.classList.toggle('selected',list.has(value));button.setAttribute('aria-pressed',list.has(value));if(q.type==='messages')sortThread();}
+  if(q.multi){const list=new Set(answers[q.id]||[]);list.has(value)?list.delete(value):list.add(value);answers[q.id]=[...list];button.classList.toggle('selected',list.has(value));button.setAttribute('aria-pressed',list.has(value));if(q.type==='messages')updateVibe();}
   else{answers[q.id]=value;content.querySelectorAll('[data-intake-pick]').forEach(b=>{const on=b===button;b.classList.toggle('selected',on);b.setAttribute('aria-pressed',on);});}
   updateNext();
 }
-function pickedFirst(list,value){const sel=new Set(value||[]);return [...list.filter(x=>sel.has(x)),...list.filter(x=>!sel.has(x))];}
-// Smoothly move picked messages to the top of the thread.
-function sortThread(){const box=document.getElementById('intake-thread');if(!box)return;const items=[...box.children],before=new Map(items.map(el=>[el,el.getBoundingClientRect().top]));
-  const sorted=[...items.filter(el=>el.classList.contains('selected')),...items.filter(el=>!el.classList.contains('selected'))];sorted.forEach(el=>box.appendChild(el));
-  if(!reducedMotion())sorted.forEach(el=>{const d=before.get(el)-el.getBoundingClientRect().top;if(d)el.animate([{transform:`translateY(${d}px)`},{transform:'none'}],{duration:320,easing:'cubic-bezier(.2,.8,.2,1)'});});
-  box.scrollTo({top:0,behavior:reducedMotion()?'auto':'smooth'});}
 function chooseOwn(button){const q=QUESTIONS[qIndex];answers[q.id+'Own']=true;answers[q.id]=(document.getElementById('intake-own-input')?.value||'').trim();
   content.querySelectorAll('[data-intake-pick]').forEach(b=>{b.classList.remove('selected');b.setAttribute('aria-pressed','false');});button.classList.add('selected');button.setAttribute('aria-pressed','true');
   const f=document.getElementById('intake-own-field');f.hidden=false;f.querySelector('input').focus();updateNext();}
+// What the picked messages suggest about the friendship, shown in place of the hint on the messages question.
+const VIBES=[['sweet',/miss|love|♡|❤|text me when|made it home|proud|thinking of you|hug/],['teasing',/who raised you|lol|lmao|😭|iconic|why are we|religious|unhinged|again/],
+  ['up for anything',/train|trip|london|road|upside down|walk|ludlow|the l\b|sleepover|bringing/],['food-obsessed',/burger|noodle|pizza|eat|dinner|brunch|snack|diner/],['a little late-night',/u up|2am|3am|late|tonight|midnight/]];
+function vibeLine(){
+  const texts=(answers.messages||[]).map(id=>(data.MESSAGES.find(m=>m[0]===id)||[])[1]||'').map(t=>t.toLowerCase());
+  if(!texts.length)return 'Pick the ones that sound like you two, and we’ll read the vibe.';
+  const found=VIBES.map(([label,re])=>[label,texts.filter(t=>re.test(t)).length]).filter(([,n])=>n).sort((a,b)=>b[1]-a[1]).map(([l])=>l).slice(0,3);
+  if(!found.length)return 'Reading this as easygoing and a little low-key.';
+  const list=found.length>1?`${found.slice(0,-1).join(', ')} and ${found[found.length-1]}`:found[0];
+  return `Reading this as ${list}.`;
+}
+function updateVibe(){const el=document.getElementById('intake-vibe');if(el)el.textContent=vibeLine();}
 function updateNext(){
   const q=QUESTIONS[qIndex],next=document.querySelector('[data-intake="next"]');if(!next||step!=='question')return;
   const v=answers[q.id],ok=(q.type==='tiles'&&answers[q.id+'Own'])?!!(v||'').trim():q.type==='tone'||(q.type==='favorites'&&(answers.favoritesNote||'').trim())||(q.multi?(v||[]).length>0:!!v);

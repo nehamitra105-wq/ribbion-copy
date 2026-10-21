@@ -1943,3 +1943,86 @@ strong,b,h1,h2,h3,h4,h5,h6,th,dt,legend,optgroup{font-weight:400}
 /* Tone grid handle (Figma 61:675): 32px, 5px corners, 1px #853f10 border, radial glow from the bottom-right */
 .intake-tone-handle{width:32px;height:32px;border-radius:5px;border:1px solid #853f10;overflow:hidden;box-shadow:none!important;
   background:radial-gradient(293.5% 293.5% at 112.5% 134.4%,#ffc096 15.596%,#eea677 17.975%,#dd8d57 20.353%,#cc7337 22.732%,#bb5917 25.11%,#884111 35.38%,#55280b 45.65%)}
+
+/* "Some ideas for …" cards (Figma 192:117 / 128:227): no card fill and no blur. The photo, at 64% over
+   #140f0c (≈ brightness .64 plus a lifted black), is screened straight onto the warm page behind it,
+   so shadows take on the orange and highlights stay bright. Other cards keep the blurred treatment. */
+.ribbon-home .home-idea{isolation:auto;background:transparent!important;box-shadow:none}
+.ribbon-home .home-idea .home-idea-photo{top:0;left:0;width:100%;height:100%;filter:sepia(.18) brightness(.88) contrast(1.04) saturate(1.08)!important;mix-blend-mode:screen;opacity:1}
+.ribbon-home .home-idea:before{opacity:1;mix-blend-mode:normal;background:linear-gradient(180deg,transparent 35%,rgba(85,40,11,.38) 100%)}
+.ribbon-home .home-idea:after{display:block;content:'';position:absolute;inset:0;z-index:1;border-radius:inherit;pointer-events:none;box-shadow:inset 0 0 0 .75px rgba(255,255,255,.18);background:none;-webkit-backdrop-filter:none;backdrop-filter:none;height:auto;top:0;bottom:0}
+/* Orange screened over each idea photo (as in Figma 192:117): darks lift to warm orange, lights stay bright */
+.ribbon-home .home-idea .home-idea-photo{filter:brightness(.92) contrast(1.05)!important;mix-blend-mode:normal}
+.ribbon-home .home-idea:before{opacity:1;mix-blend-mode:screen;background:linear-gradient(160deg,#c9561c 0%,#b8461a 55%,#9a3912 100%)}
+.ribbon-home .home-idea-book .home-idea-label{max-width:none;white-space:nowrap}
+/* Keep the blend inside each card so the rounded corners clip it, then darken under the titles */
+.ribbon-home .home-idea{isolation:isolate}
+.ribbon-home .home-idea .home-idea-photo,.ribbon-home .home-idea:before{border-radius:inherit}
+/* Darker from the top-left corner (behind the template tag) and along the bottom (behind the title) */
+.ribbon-home .home-idea:after{background:radial-gradient(58% 85% at 100% 40%,rgba(255,206,160,.3) 0%,rgba(255,180,120,.12) 50%,rgba(255,180,120,0) 100%),radial-gradient(210px 120px at 0 0,rgba(34,10,3,.86) 0%,rgba(34,10,3,.55) 42%,rgba(34,10,3,0) 100%),linear-gradient(180deg,rgba(45,16,5,.18) 0%,rgba(45,16,5,.28) 45%,rgba(40,13,4,.62) 100%)}
+.ribbon-home .home-idea:after{-webkit-mask-image:none;mask-image:none}
+/* A warm light coming in on the right of each idea card: lightest at its center, fading toward the middle */
+.ribbon-home .home-idea:before{background:radial-gradient(60% 85% at 100% 40%,rgba(255,214,168,.62) 0%,rgba(255,170,110,.3) 45%,rgba(255,150,90,0) 100%),linear-gradient(160deg,#c9561c 0%,#b8461a 55%,#9a3912 100%)}
+/* Tiny light glares (Figma 128:277): two soft four-point stars at the card edges, kept very faint */
+.home-idea-glare{position:absolute;inset:0;z-index:1;overflow:hidden;border-radius:inherit;pointer-events:none;mix-blend-mode:screen;opacity:.38}
+.home-idea-glare i{position:absolute;background:url(assets/warm/glare-star-1.png) center/contain no-repeat}
+.home-idea-glare i:first-child{width:155px;height:154px;right:-50px;top:-74px;transform:rotate(-16.43deg)}
+.home-idea-glare i:last-child{width:87px;height:86px;left:-37px;bottom:-36px;transform:rotate(88.39deg);background-image:url(assets/warm/glare-star-2.png)}
+.home-idea-capsule .home-idea-glare i:first-child{right:auto;left:-46px;top:-80px}
+.home-idea-capsule .home-idea-glare i:last-child{left:auto;right:-34px;bottom:-40px}
+.home-idea-glare{z-index:2;mix-blend-mode:normal;opacity:.5}
+.home-idea-glare i:first-child{width:118px;height:117px;right:-26px;top:-38px}
+.home-idea-glare i:last-child{width:70px;height:69px;left:-18px;bottom:-14px}
+.home-idea-capsule .home-idea-glare i:first-child{right:auto;left:-30px;top:-44px}
+.home-idea-capsule .home-idea-glare i:last-child{left:auto;right:-16px;bottom:-18px}
+/* Glares softened to a formless warm bloom: heavy blur, shifted from yellow toward the cards' peach */
+.home-idea-glare i{filter:blur(16px) hue-rotate(-22deg) saturate(.85) brightness(1.08)}
+.home-idea-glare{opacity:.55}
+
+/* Collection viewer swipe: a looping fan of 3:4 cards pivoting on a point below, details top-left on each */
+.iv-fan{position:relative;flex:1;min-height:0;margin-top:18px;touch-action:pan-y;user-select:none;-webkit-user-select:none;outline:none;cursor:grab}
+.iv-fan.dragging{cursor:grabbing}
+.iv-card{position:absolute;left:50%;top:6px;width:min(64%,250px);aspect-ratio:3/4;max-height:calc(100% - 12px);margin-left:calc(min(64%,250px) / -2);
+  border-radius:20px;overflow:hidden;background:#2a160c;transform-origin:50% 240%;transition:transform .45s cubic-bezier(.2,.8,.2,1),opacity .3s}
+.iv-fan.dragging .iv-card{transition:none}
+.iv-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none}
+.iv-card:not(.is-current) img,.iv-card:not(.is-current) .iv-card-msg{filter:brightness(.72)}
+.iv-meta{position:absolute;left:0;right:0;top:0;padding:14px 16px 28px;background:linear-gradient(180deg,rgba(20,8,3,.55),rgba(20,8,3,0));color:#fff;pointer-events:none}
+.iv-meta strong{display:block;font-size:14px;font-weight:400;line-height:1.3}
+.iv-meta small{display:block;margin-top:2px;font-size:12px;color:#ffffffb3}
+.iv-card.message{background:radial-gradient(120% 90% at 85% 0%,#c9561c 0%,#853f10 45%,#2a1206 100%)}
+.iv-card-msg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:64px 18px 24px}
+.iv-card-msg p{margin:0;max-width:100%;padding:14px 18px;border-radius:22px;border-bottom-left-radius:8px;background:#7c7c7c;color:#fff;font-size:17px;line-height:1.3}
+.iv-card-msg p.you{background:#007aff;border-bottom-left-radius:22px;border-bottom-right-radius:8px}
+@media(prefers-reduced-motion:reduce){.iv-card{transition:none}}
+
+/* Tone grid: dots near the handle light up as it moves over them */
+@property --hx{syntax:'<percentage>';inherits:true;initial-value:50%}
+@property --hy{syntax:'<percentage>';inherits:true;initial-value:50%}
+.intake-tone-inner{transition:--hx .25s cubic-bezier(.2,.8,.2,1),--hy .25s cubic-bezier(.2,.8,.2,1)}
+.intake-tone-inner.dragging{transition:none}
+.intake-tone-dots.lit{opacity:.95;
+  -webkit-mask:radial-gradient(circle 54px at var(--hx) var(--hy),#000 0%,rgba(0,0,0,.55) 45%,transparent 100%),url(assets/intake/tone-mask.svg) center/100% 100% no-repeat;-webkit-mask-composite:source-in;
+  mask:radial-gradient(circle 54px at var(--hx) var(--hy),#000 0%,rgba(0,0,0,.55) 45%,transparent 100%),url(assets/intake/tone-mask.svg) center/100% 100% no-repeat;mask-composite:intersect}
+@media(prefers-reduced-motion:reduce){.intake-tone-inner{transition:none}}
+
+/* Tone grid: no dark backing square; the grid itself is larger, the dots twice as dense, the handle round */
+.intake-tone{width:min(100%,340px);background:none;-webkit-backdrop-filter:none;backdrop-filter:none;border-radius:24px;overflow:visible}
+.intake-tone-inner{inset:0;border-radius:24px}
+.intake-tone-dots{background:radial-gradient(circle,#fff 1.1px,transparent 1.6px) center/11px 11px repeat}
+.intake-tone-dots:not(.lit){opacity:.34}
+.intake-tone-handle{border-radius:50%}
+/* Fewer dots, and offset half a step so none sit on the axis lines */
+.intake-tone-dots{background:radial-gradient(circle,#fff 1.15px,transparent 1.65px) calc(50% + 7.5px) calc(50% + 7.5px)/15px 15px repeat}
+/* Swipe fan: the current card sits centred in the space between the tabs and the arrows */
+.iv-card{top:50%;translate:0 -50%}
+
+/* "Change an answer" overview: every question with its current answer, tap to jump straight back to it */
+.intake-review-list{display:grid;gap:8px;width:100%;margin-top:24px;text-align:left}
+.intake-review-row{display:flex;align-items:center;gap:12px;width:100%;min-height:56px;padding:10px 16px;border-radius:16px;background:rgba(255,255,255,.08);color:#fff;text-align:left}
+.intake-review-row>span{flex:1;min-width:0}
+.intake-review-row small{display:block;font-size:12px;color:#ffffffa6}
+.intake-review-row strong{display:block;font-size:15px;font-weight:400;line-height:1.35;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.intake-review-row strong.empty{color:#ffffff80}
+.intake-review-row .icon{width:15px;height:15px;flex:none;opacity:.7}
+.intake-review .intake-back.solo{margin-top:18px}
