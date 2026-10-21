@@ -66,7 +66,7 @@ function rng(seed){return()=>{seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(see
 function fibonacci(i,n){const y=1-(i+.5)/n*2,r=Math.sqrt(1-y*y),a=i*2.399963;return [Math.cos(a)*r,y,Math.sin(a)*r];}
 
 let ctx=null,nodes=[],edges=[],stage,lineLayer,nodeLayer,raf=0,last=0;
-let cam={x:0,y:0,z:OVERVIEW_Z},camT={...cam},rot={x:-.12,y:0},rotT={...rot};
+let cam={x:0,y:0,z:OVERVIEW_Z},camT={...cam},homeT={...cam},recenterShown=false,rot={x:-.12,y:0},rotT={...rot};
 let lens='all',focusGroup=null,focusDepth=0,selected=new Set(),activeId=null,idleUntil=0,pointers=new Map(),drag=null,dragged=false,hinted=false;
 
 function buildNodes(){
@@ -110,6 +110,7 @@ function markup(c){
 <header class="web-top"><button class="icon-button web-back" data-go="${c.back||'memories'}" aria-label="Back">${c.icon('back')}</button><h1 class="web-title">${person}’s Web</h1><button class="web-orb" id="web-orb" aria-label="Remix selected memories"><span class="web-orb-count" id="web-orb-count" hidden></span></button></header>
 <div class="web-lenses" role="group" aria-label="Arrange the web">${Object.entries({all:'All',moment:'Moments',place:'Places',time:'Time'}).map(([k,l])=>`<button class="web-chip ${k==='all'?'active':''}" data-web-lens="${k}" aria-pressed="${k==='all'}">${l}</button>`).join('')}</div>
 <div class="web-clusters" id="web-clusters" hidden></div>
+<button class="web-recenter" id="web-recenter" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg>Recenter</button>
 <div class="web-card" id="web-card" hidden></div>
 <p class="web-hint" id="web-hint">Scroll to zoom where you point · drag to turn · tap to pick</p>
 </section>`;
@@ -130,7 +131,7 @@ function mount(c){
   [...nodeLayer.children].forEach((el,i)=>{nodes[i].el=el;});
   lineLayer.innerHTML=edges.map(()=>'<line/>').join('');
   [...lineLayer.children].forEach((el,i)=>{edges[i].el=el;});
-  cam={x:0,y:0,z:reducedMotion()?OVERVIEW_Z:INTRO_Z};camT={x:0,y:0,z:OVERVIEW_Z};rot={x:-.12,y:-.6};rotT={...rot};lens='all';focusGroup=null;activeId=null;hinted=false;selected=new Set();idleUntil=0;
+  cam={x:0,y:0,z:reducedMotion()?OVERVIEW_Z:INTRO_Z};camT={x:0,y:0,z:OVERVIEW_Z};homeT={...camT};recenterShown=false;rot={x:-.12,y:-.6};rotT={...rot};lens='all';focusGroup=null;activeId=null;hinted=false;selected=new Set();idleUntil=0;
   stage.addEventListener('wheel',onWheel,{passive:false});
   stage.addEventListener('pointerdown',onDown);
   stage.addEventListener('pointermove',onMove);
@@ -182,6 +183,7 @@ function onClick(e){
   const cluster=e.target.closest('[data-web-cluster]');if(cluster)return focus(cluster.dataset.webCluster||null);
   const node=e.target.closest('[data-web-node]');if(node){if(dragged){dragged=false;return;}return toggle(node.dataset.webNode);}
   if(e.target.closest('#web-orb'))return openRemix();
+  if(e.target.closest('#web-recenter'))return recenter();
   const explore=e.target.closest('[data-web-explore]');if(explore){const v=nodes.find(n=>n.id===explore.dataset.webExplore);setLens('moment');return focus(v.moment);}
   if(e.target.closest('[data-web-card-close]')){activeId=null;return renderCard();}
   const remix=e.target.closest('[data-web-remix]');
@@ -194,13 +196,13 @@ function setLens(next){
   const box=document.getElementById('web-clusters');
   if(next==='all')box.hidden=true;
   else{box.hidden=false;box.innerHTML=`<button class="web-chip small active" data-web-cluster="">Everything</button>`+Object.entries(LENSES[next][1]).map(([k,l])=>`<button class="web-chip small" data-web-cluster="${k}">${esc(l)}</button>`).join('');}
-  layout();camT={x:0,y:0,z:OVERVIEW_Z-(next==='place'?260:120)};rotT.x=-.12;interacted();renderCard();
+  layout();camT={x:0,y:0,z:OVERVIEW_Z-(next==='place'?260:120)};homeT={...camT};rotT.x=-.12;interacted();renderCard();
 }
 
 function focus(key){
   focusGroup=key||null;
   document.querySelectorAll('[data-web-cluster]').forEach(b=>b.classList.toggle('active',(b.dataset.webCluster||null)===focusGroup));
-  if(!focusGroup){camT={x:0,y:0,z:OVERVIEW_Z-(lens==='place'?260:120)};interacted();return;}
+  if(!focusGroup){camT={x:0,y:0,z:OVERVIEW_Z-(lens==='place'?260:120)};homeT={...camT};interacted();return;}
   const groups=Object.keys(LENSES[lens][1]),c=groupCenter(groups.indexOf(key),groups.length);
   let target=Math.atan2(-c[0],c[2])+Math.PI;
   while(target-rot.y>Math.PI)target-=Math.PI*2;
@@ -208,9 +210,13 @@ function focus(key){
   rotT.y=target;rotT.x=0;
   const members=nodes.filter(o=>o.kind!=='dot'&&o[lens]===key).length,spread=130+members*12;
   focusDepth=F*.9+spread*1.7;
-  camT={x:0,y:c[1],z:-Math.hypot(c[0],c[2])-focusDepth};
+  camT={x:0,y:c[1],z:-Math.hypot(c[0],c[2])-focusDepth};homeT={...camT};
   idleUntil=Infinity;
 }
+// Back to the framing the current lens or group opened with.
+function recenter(){if(focusGroup)return focus(focusGroup);camT={...homeT};rotT.x=-.12;interacted();}
+// Offer Recenter once the view has been zoomed out or panned well away from that framing.
+function updateRecenter(){const away=camT.z<homeT.z-320||Math.hypot(camT.x-homeT.x,camT.y-homeT.y)>320;if(away===recenterShown)return;recenterShown=away;const b=document.getElementById('web-recenter');if(b)b.hidden=!away;}
 
 function toggle(id){
   const v=nodes.find(n=>n.id===id);
@@ -246,6 +252,7 @@ function frame(now){
   const still=reducedMotion(),k=still?1:1-Math.pow(.86,dt/16),kn=still?1:1-Math.pow(.93,dt/16);
   if(!still&&now>idleUntil&&!focusGroup)rotT.y+=dt*.00007;
   rot.x+=(rotT.x-rot.x)*k;rot.y+=(rotT.y-rot.y)*k;
+  updateRecenter();
   const kc=still?1:1-Math.pow(.94,dt/16);cam.x+=(camT.x-cam.x)*kc;cam.y+=(camT.y-cam.y)*kc;cam.z+=(camT.z-cam.z)*kc;
   const W=stage.offsetWidth,H=stage.offsetHeight,cy=Math.cos(rot.y),sy=Math.sin(rot.y),cx=Math.cos(rot.x),sx=Math.sin(rot.x);
   const centerDist=Math.max(F*.9,Math.hypot(cam.x,cam.y,cam.z)),focusDist=focusGroup?focusDepth:Math.max(F*.85,centerDist-R*.55);

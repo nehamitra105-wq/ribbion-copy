@@ -1689,13 +1689,16 @@ button,.home-idea,.gift-card,.draft-cover,.tpl-pick,.cap-hero{box-shadow:none!im
    Figma notes round (174:17)
    ===================================================================== */
 
-/* Web: lens chips sit low on the screen, within thumb reach, centered (not a nav bar) */
-.web-lenses{top:auto;bottom:calc(74px + env(safe-area-inset-bottom))}
-.web-clusters{top:auto;bottom:calc(34px + env(safe-area-inset-bottom))}
+/* Web: lens chips stay under the title; the group chips sit at the bottom, within thumb reach,
+   with Recenter stacked above them (or alone at bottom center) */
+.web-clusters{top:auto;bottom:calc(30px + env(safe-area-inset-bottom))}
 .web-clusters>:first-child{margin-left:auto}.web-clusters>:last-child{margin-right:auto}
-.web-lenses,.web-clusters{transition:opacity .2s}
-.web-screen:has(.web-card:not([hidden])) .web-lenses,.web-screen:has(.web-card:not([hidden])) .web-clusters{opacity:0;pointer-events:none}
-.web-hint{bottom:auto;top:126px}
+.web-clusters,.web-recenter{transition:opacity .2s,transform .25s}
+.web-recenter{position:absolute;z-index:6;left:50%;bottom:calc(30px + env(safe-area-inset-bottom));transform:translateX(-50%);display:flex;align-items:center;gap:6px;min-height:0;padding:7px 14px 7px 11px;border-radius:var(--radius-pill);background:#111;color:#fff;font:400 12px/1.5 var(--font-text);letter-spacing:var(--tracking);white-space:nowrap}
+.web-recenter svg{width:15px;height:15px}
+.web-recenter[hidden]{display:flex;opacity:0;pointer-events:none;transform:translate(-50%,8px)}
+.web-clusters:not([hidden])~.web-recenter{bottom:calc(72px + env(safe-area-inset-bottom))}
+.web-screen:has(.web-card:not([hidden])) .web-clusters,.web-screen:has(.web-card:not([hidden])) .web-recenter{opacity:0;pointer-events:none}
 
 /* Nothing bold: every heading, label and emphasis uses Neue Haas 55 Roman */
 strong,b,h1,h2,h3,h4,h5,h6,th,dt,legend,optgroup{font-weight:400}
@@ -1820,3 +1823,11 @@ strong,b,h1,h2,h3,h4,h5,h6,th,dt,legend,optgroup{font-weight:400}
 /* The legacy .photo grain overlay escaped the unpositioned grid cells and covered the whole viewer */
 .iv-cell.photo:after{content:none}
 .iv-cell.photo{position:relative}
+
+/* Quiz answer cards: 10% fill, roomier sides, smaller line icons */
+.intake-card{background:rgba(255,255,255,.1)!important;padding:20px 16px;gap:14px}
+.intake-card.selected{background:rgba(255,192,150,.16)!important}
+.intake-card-icon{width:28px;height:28px}
+.intake-card-icon>img,.intake-card-icon>svg{transform:scale(.72);transform-origin:center}
+/* Big screen headers (contact picker, Contacts & memories, import) use Advercase like the rest */
+.intro h1{font-family:var(--font-display);font-weight:400;line-height:1.15;letter-spacing:-.01em}
