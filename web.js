@@ -112,7 +112,6 @@ function markup(c){
 <div class="web-clusters" id="web-clusters" hidden></div>
 <button class="web-recenter" id="web-recenter" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg>Recenter</button>
 <div class="web-card" id="web-card" hidden></div>
-<p class="web-hint" id="web-hint">Scroll to zoom where you point · drag to turn · tap to pick</p>
 </section>`;
 }
 

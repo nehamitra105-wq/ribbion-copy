@@ -2154,3 +2154,10 @@ code,kbd,samp,pre{font-family:var(--font-text)}
 /* Home hero: the person's contact picture beside the occasion */
 .home-hero-title{display:flex;align-items:center;gap:12px}
 .hero-avatar{width:36px;height:36px;font-size:15px;flex:none}
+
+/* Headers start 20px below the Dynamic Island (island bottom ≈ 48px, so the header row begins at 68px) */
+.tpl-top{padding-top:68px}
+.upcoming-screen>.topbar,.gift-screen>.topbar{padding-top:68px!important;height:128px}
+.web-top{padding-top:65px}
+/* Viewer fan: each photo card keeps the photo's own shape; landscape cards run wider */
+.iv-card.wide{width:min(82%,310px);margin-left:calc(min(82%,310px) / -2)}

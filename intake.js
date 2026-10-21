@@ -240,7 +240,7 @@ let viewer=null;
 function collectionItems(key){
   const c=collectionOf(key),photos=data.PHOTOS.filter(p=>p[c.pi]===c.k),msgs=data.MESSAGES.filter(m=>m[c.mi]===c.k),used=new Set(),items=[];
   const msgItem=m=>({type:'message',id:m[0],text:m[1],sender:m[7],source:m[5],time:data.TIMES[m[4]]});
-  photos.forEach(p=>{items.push({type:'photo',id:p[0],caption:p[6],time:data.TIMES[p[5]],place:data.PLACES[p[4]]});msgs.filter(m=>!used.has(m[0])&&m[6][0]===p[0]).forEach(m=>{used.add(m[0]);items.push(msgItem(m));});});
+  photos.forEach(p=>{items.push({type:'photo',id:p[0],w:p[1],h:p[2],caption:p[6],time:data.TIMES[p[5]],place:data.PLACES[p[4]]});msgs.filter(m=>!used.has(m[0])&&m[6][0]===p[0]).forEach(m=>{used.add(m[0]);items.push(msgItem(m));});});
   msgs.filter(m=>!used.has(m[0])).forEach(m=>items.push(msgItem(m)));
   return items;
 }
@@ -280,7 +280,7 @@ function drawViewer(){
   el.innerHTML=`<div class="iv-scrim" data-viewer-close></div><div class="iv-panel">
 <header class="iv-head"><div class="iv-title"><h2>${esc(label)}</h2><small>${nP} ${nP===1?'photo':'photos'} · ${nM} ${nM===1?'message':'messages'}</small></div><button class="iv-close" data-viewer-close aria-label="Close">${ctx.icon('close')}</button></header>
 <div class="iv-modes" role="group" aria-label="View as"><button class="${mode==='swipe'?'active':''}" data-viewer-mode="swipe" aria-pressed="${mode==='swipe'}">Swipe</button><button class="${mode==='all'?'active':''}" data-viewer-mode="all" aria-pressed="${mode==='all'}">All</button></div>
-${mode==='swipe'?`<div class="iv-fan" id="iv-fan" tabindex="0" role="group" aria-roledescription="carousel" aria-label="Swipe through ${esc(label)}">${items.map((it,i)=>`<div class="iv-card ${it.type}" data-i="${i}" aria-label="${i+1} of ${items.length}">${fanCard(it)}</div>`).join('')}</div>
+${mode==='swipe'?`<div class="iv-fan" id="iv-fan" tabindex="0" role="group" aria-roledescription="carousel" aria-label="Swipe through ${esc(label)}">${items.map((it,i)=>`<div class="iv-card ${it.type}${it.type==='photo'&&it.w>it.h*1.05?' wide':''}" data-i="${i}" ${it.type==='photo'?`style="aspect-ratio:${it.w}/${it.h}"`:''} aria-label="${i+1} of ${items.length}">${fanCard(it)}</div>`).join('')}</div>
 <div class="iv-nav"><button data-viewer-step="-1" aria-label="Previous">${ctx.icon('back')}</button><span class="iv-dots" aria-hidden="true">${items.map((_,i)=>`<i class="${i===index?'on':''}"></i>`).join('')}</span><button data-viewer-step="1" aria-label="Next">${ctx.icon('arrow')}</button></div>`
 :`<div class="iv-all">${nP?`<h3 class="iv-all-label">Photos</h3><div class="iv-grid">${items.map((it,i)=>it.type==='photo'?`<button class="iv-cell photo" data-viewer-jump="${i}" aria-label="${esc(it.caption)}"><img src="assets/constellation/thumbs/${it.id}.jpg" alt=""></button>`:'').join('')}</div>`:''}${nM?`<h3 class="iv-all-label">Messages</h3><div class="iv-thread">${items.map((it,i)=>it.type==='message'?`<button class="iv-cell message ${it.sender==='you'?'you':''}" data-viewer-jump="${i}" aria-label="Message: ${esc(it.text)}"><span>${esc(it.text)}</span></button>`:'').join('')}</div>`:''}</div>`}
 <button class="iv-include ${inc?'on':''}" data-viewer-toggle aria-pressed="${inc}">${inc?'Included in the gift ✓':'Include this collection'}</button></div>`;
