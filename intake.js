@@ -64,7 +64,9 @@ function mount(c){
   document.addEventListener('click',onClick);
   document.addEventListener('input',onInput);
   document.addEventListener('keydown',onKey);
-  if(c.preset){person=c.preset;slots.forEach(v=>{v.filled=true;v.el.classList.add('filled');});gathered=true;dim=dimT=.45;speed=speedT=50;if(c.resume){Object.assign(answers,structuredClone(c.resume.answers));qIndex=c.resume.index;}renderQuestion();}
+  if(c.preset&&c.resume){person=c.preset;slots.forEach(v=>{v.filled=true;v.el.classList.add('filled');});gathered=true;dim=dimT=.45;speed=speedT=50;Object.assign(answers,structuredClone(c.resume.answers));qIndex=c.resume.index;renderQuestion();}
+  // Starting fresh for a known person (e.g. from their gift screen) still plays the gathering intro.
+  else if(c.preset){document.getElementById('intake-progress').hidden=true;document.getElementById('intake-actions').hidden=true;startGathering(c.preset);}
   else renderContact();
   last=performance.now();raf=requestAnimationFrame(frame);
 }
