@@ -59,8 +59,11 @@ const pages={
 <div class="tpl-intro"><h1>Pick a trivia template</h1><p>Start from a head start built around ${esc(ctx.person)}, then make it yours.</p></div>
 <div class="tpl-picks">
 <button class="tpl-pick tpl-pick-beli" data-go="beli"><span class="tpl-pick-art" aria-hidden="true"><i class="good">8.9</i><i class="okay">5.4</i><i class="bad">2.1</i></span><span><strong>Beli trivia</strong><small>Friends guess how ${esc(ctx.person)} rated the places they’ve eaten.</small></span>${ctx.icon('arrow')}</button>
-<button class="tpl-pick tpl-pick-jeo" data-go="jeopardy"><span class="tpl-pick-art" aria-hidden="true">${'<i>100</i>'.repeat(3)}${'<i>200</i>'.repeat(3)}</span><span><strong>Jeopardy board</strong><small>A game board for the party, with a buzzer link for everyone.</small></span>${ctx.icon('arrow')}</button>
+<button class="tpl-pick tpl-pick-jeo" data-go="jeopardy"><span class="tpl-pick-art" aria-hidden="true">${'<i>100</i>'.repeat(2)}${'<i>200</i>'.repeat(2)}</span><span><strong>Jeopardy board</strong><small>A game board for the party, with a buzzer link for everyone.</small></span>${ctx.icon('arrow')}</button>
 <button class="tpl-pick tpl-pick-memory" data-create-format="trivia"><span class="tpl-pick-art" aria-hidden="true"><img src="assets/constellation/thumbs/m18.jpg" alt=""><img src="assets/constellation/thumbs/m12.jpg" alt=""></span><span><strong>Memory quiz</strong><small>Questions about your photos and messages, with the story behind each answer.</small></span>${ctx.icon('arrow')}</button>
+<p class="tpl-section-label">More games, coming soon</p>
+<button class="tpl-pick tpl-concept tpl-pick-headsup" data-tpl-concept="Forehead guess"><span class="tpl-pick-art" aria-hidden="true"><i>Road trip!</i></span><span><strong>Forehead guess</strong><small>Hold the phone up and friends act out moments with ${esc(ctx.person)} until you guess them.</small></span><span class="tpl-soon">Concept</span></button>
+<button class="tpl-pick tpl-concept tpl-pick-quizshow" data-tpl-concept="Live quiz show"><span class="tpl-pick-art" aria-hidden="true"><i>▲</i><i>●</i><i>■</i><i>◆</i></span><span><strong>Live quiz show</strong><small>Everyone answers on their own phone. Fastest right answer about ${esc(ctx.person)} wins.</small></span><span class="tpl-soon">Concept</span></button>
 </div></section>`;},
 
   beli(){const d=beli();return `<section class="screen beli beli-editor">
@@ -306,7 +309,7 @@ function mount(name,c){
 }
 function unmount(){unmounters[screen]?.();cleanup.forEach(f=>f());cleanup=[];screen='';}
 const unmounters={};
-const mounters={beli:mountBeliEditor,beliPlay:mountBeliPlay,jeopardy:mountJeoEditor,jeopardyBoard:mountJeoBoard,jeopardyPlay:mountJeoPlay};
+const mounters={triviaTemplates:()=>on(document,'click',e=>{const b=e.target.closest('[data-tpl-concept]');if(b)ctx.toast(`${b.dataset.tplConcept} is a concept in this prototype.`);}),beli:mountBeliEditor,beliPlay:mountBeliPlay,jeopardy:mountJeoEditor,jeopardyBoard:mountJeoBoard,jeopardyPlay:mountJeoPlay};
 // Other template files add screens here: register({name:{markup(ctx),mount(ctx,on)}}).
 function register(defs){Object.entries(defs).forEach(([name,d])=>{pages[name]=()=>d.markup(ctx);if(d.mount)mounters[name]=c=>d.mount(c,on);if(d.unmount)unmounters[name]=d.unmount;});}
 function markup(name,c){ctx=c;return pages[name]();}
