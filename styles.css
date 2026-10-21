@@ -1939,3 +1939,7 @@ strong,b,h1,h2,h3,h4,h5,h6,th,dt,legend,optgroup{font-weight:400}
 /* Notification time in light (white) text; no focus ring on the notification */
 .lock-note time{color:rgba(255,255,255,.72);mix-blend-mode:normal}
 .lock-screen .lock-note:focus,.lock-screen .lock-note:focus-visible{outline:none}
+
+/* Tone grid handle (Figma 61:675): 32px, 5px corners, 1px #853f10 border, radial glow from the bottom-right */
+.intake-tone-handle{width:32px;height:32px;border-radius:5px;border:1px solid #853f10;overflow:hidden;box-shadow:none!important;
+  background:radial-gradient(293.5% 293.5% at 112.5% 134.4%,#ffc096 15.596%,#eea677 17.975%,#dd8d57 20.353%,#cc7337 22.732%,#bb5917 25.11%,#884111 35.38%,#55280b 45.65%)}
