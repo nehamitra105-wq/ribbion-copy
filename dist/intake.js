@@ -8,10 +8,10 @@ const FAVORITES=['Burgers on road trips','Chasing sunsets','Late nights on the L
 const QUESTIONS=[
   {id:'format',title:'What kind of gift are you making?',type:'cards',options:[['storybook','A storybook','Chapters of your moments, in your words'],['trivia','Trivia','How well do they know your story?'],['capsule','A time capsule','Something for them to open later'],['unsure','I don’t know yet','Answer the rest and we’ll suggest one']]},
   {id:'occasion',title:'What’s the occasion, really?',type:'tiles',options:['Their birthday','Graduation','Moving away','Just because','Saying sorry','Our friendiversary']},
+  {id:'favorites',title:'Any obsessions, favorites or notable things {person} loves?',type:'favorites',multi:true,options:FAVORITES},
   {id:'scope',title:'Is this a personal moment or a shared one?',type:'cards',options:[['personal','Just the two of us','A one-on-one moment between you'],['group','Shared with a group','Friends can be part of it too']]},
   {id:'reminds',title:'What reminds you of them most?',type:'photos',multi:true,pull:['m04','m12','m07','m16']},
   {id:'moments',title:'Which memory collections should the gift focus on?',type:'moments',multi:true},
-  {id:'favorites',title:'Any obsessions, favorites or notable things {person} loves?',type:'favorites',multi:true,options:FAVORITES},
   {id:'tone',title:'What’s the vibe for the mood?',type:'tone'},
   {id:'relationship',title:'What explains you two best?',type:'chips',multi:true,options:['Ride or die','Found family','Chaotic in the best way','Soft and steady','Long distance','Since we were kids','Partners in crime']},
   {id:'messages',title:'Which messages sound most like you two?',type:'messages',multi:true,pull:['t06','t12','t13','t10','t04','t08','t02','t11','t15']}
@@ -33,7 +33,7 @@ function buildSlots(){
   ['m05','m13','m20','m09','m15','m01','m22','m10'].forEach((id,i)=>slots.push({id:'c'+i,src:id,kind:'circle',size:Math.round(60+rand()*50)}));
   for(let i=0;i<18;i++)slots.push({id:'d'+i,kind:'dot',size:Math.round(14+rand()*16)});
   const order=slots.map((_,i)=>i).sort(()=>rand()-.5);
-  slots.forEach((v,i)=>{const k=order[i];v.theta=k*2.39996;v.radius=230+rand()*270;v.z=k/slots.length*DEPTH+rand()*80;v.blur=-1;v.zi=-1;v.filled=false;v.pulled=false;});
+  slots.forEach((v,i)=>{const k=order[i];v.theta=(k>>1)*2.39996+(k&1)*Math.PI;v.radius=230+rand()*270;v.z=k/slots.length*DEPTH+rand()*80;v.blur=-1;v.zi=-1;v.filled=false;v.pulled=false;});
 }
 
 function slotHTML(v){
@@ -86,7 +86,7 @@ function renderContact(){
   step='contact';speedT=60;dimT=.85;
   document.getElementById('intake-progress').hidden=true;document.getElementById('intake-actions').hidden=true;
   const list=ctx.contacts.length?ctx.contacts:[{id:'maya',name:'Maya',count:6}];
-  swap(`<div class="intake-question"><h1 class="intake-title">Who is this for?</h1><p class="intake-sub">Ribbon looks through the photos and messages you share with them.</p><div class="intake-contacts">${list.map(c=>`<button class="intake-contact" data-intake-contact="${esc(c.name)}"><span class="intake-monogram">${esc(c.name[0])}</span><span><strong>${esc(c.name)}</strong><small>${c.count} saved ${c.count===1?'memory':'memories'}</small></span></button>`).join('')}</div><p class="intake-note">Demo: sample photos and messages. No accounts are connected.</p></div>`);
+  swap(`<div class="intake-question"><h1 class="intake-title">Who is this for?</h1><p class="intake-sub">Ribbon looks through the photos and messages you share with them.</p><div class="intake-contacts">${list.map(c=>`<button class="intake-contact" data-intake-contact="${esc(c.name)}"><span class="intake-monogram" data-tone="${c.name.charCodeAt(0)%3}">${esc(c.name[0])}</span><span><strong>${esc(c.name)}</strong><small>${c.count} saved ${c.count===1?'memory':'memories'}</small></span></button>`).join('')}</div><p class="intake-note">Demo: sample photos and messages. No accounts are connected.</p></div>`);
 }
 
 function startGathering(name){
@@ -176,13 +176,26 @@ function bindTone(){
 }
 
 const TEMPLATE_NAMES={storybook:'A storybook',trivia:'Trivia',capsule:'A time capsule'};
+// Known obsessions that point at a specific template, e.g. "she rates everything on Beli" or "she loves Hamilton".
+const MUSICALS=['hamilton','wicked','mamma mia','les mis','phantom','dear evan hansen','six','hadestown','taylor swift','beyonce','abba','harry styles','olivia rodrigo','broadway','musical','karaoke','singing'];
+function favoriteTheme(){
+  const note=(answers.favoritesNote||'').toLowerCase(),chips=answers.favorites||[];
+  const song=MUSICALS.find(w=>new RegExp(`\\b${w}\\b`).test(note));
+  if(song){const named=['broadway','musical','karaoke','singing'].includes(song)?'':song.replace(/\b\w/g,c=>c.toUpperCase());return {kind:'karaoke',name:named};}
+  if(/beli|rates? everything|restaurant|foodie/.test(note))return {kind:'beli'};
+  const label=note.trim()?answers.favoritesNote.trim().replace(/^(she|he|they)\s+(loves?|likes?|is obsessed with)\s+/i,''):chips[0]||'';
+  return label?{kind:'theme',name:label}:null;
+}
 function recommend(){
-  const {x,y}=answers.tone,group=answers.scope==='group',favs=[...(answers.favorites||[]),answers.favoritesNote||''].join(' ').toLowerCase();
-  const foodie=/burger|noodle|spicy|food|eat|restaurant|beli/.test(favs);
-  if(group&&((answers.messages||[]).length>=2||(answers.relationship||[]).includes('Found family')))return {format:'storybook',route:'reels',title:'reel recap',reason:`It’s a shared moment, so ${person}’s friends can add their own clips and wishes.`};
-  if(y>.25)return foodie?{format:'trivia',route:'beli',title:'Beli trivia game',reason:`You want it playful, and ${person} loves good food, so friends can guess how they rated their favorite spots.`}:{format:'trivia',route:'triviaTemplates',title:'trivia game',reason:'You want it playful, so a game everyone can play fits best.'};
-  if(y<-.25&&!group)return {format:'capsule',route:'capsuleSetup',title:'time capsule',reason:`It’s heartfelt and just between you two, made to be opened together later.`};
-  return {format:'storybook',route:'storybookTemplates',title:'storybook',reason:`Your memories tell a story, so chapters in your own words will feel the most like you.`};
+  const {x,y}=answers.tone,group=answers.scope==='group',favs=[...(answers.favorites||[]),answers.favoritesNote||''].join(' ').toLowerCase(),theme=favoriteTheme();
+  const foodie=/burger|noodle|spicy|food|eat|restaurant|beli|diner/.test(favs);
+  if(theme?.kind==='karaoke')return {format:'storybook',route:'reels',title:`${theme.name?theme.name+'-themed ':''}karaoke reel`,cta:'karaoke reel',reason:`${person} loves ${theme.name||'a good singalong'}, so friends can each send a clip belting their part, cut together like a reel.`};
+  if(theme?.kind==='beli')return {format:'trivia',route:'beli',title:'Beli trivia game',reason:`${person} rates everything on Beli, so friends can guess how they scored the places you’ve eaten together.`};
+  const nod=theme?.kind==='theme'?` We’ll theme it around ${theme.name.charAt(0).toLowerCase()+theme.name.slice(1)}.`:'';
+  if(group&&((answers.messages||[]).length>=2||(answers.relationship||[]).includes('Found family')))return {format:'storybook',route:'reels',title:'reel recap',reason:`It’s a shared moment, so ${person}’s friends can add their own clips and wishes.${nod}`};
+  if(y>.25)return foodie?{format:'trivia',route:'beli',title:'Beli trivia game',reason:`You want it playful, and ${person} loves good food, so friends can guess how they rated their favorite spots.`}:{format:'trivia',route:'triviaTemplates',title:'trivia game',reason:`You want it playful, so a game everyone can play fits best.${nod}`};
+  if(y<-.25&&!group)return {format:'capsule',route:'capsuleSetup',title:'time capsule',reason:`It’s heartfelt and just between you two, made to be opened together later.${nod}`};
+  return {format:'storybook',route:'storybookTemplates',title:'storybook',reason:`Your memories tell a story, so chapters in your own words will feel the most like you.${nod}`};
 }
 function renderSummary(){
   step='summary';releaseAll();dimT=.25;
@@ -193,7 +206,7 @@ function renderSummary(){
   swap(`<div class="intake-question intake-summary"><h1 class="intake-title">${title}</h1>${rec?`<p class="intake-rec">${esc(rec.reason)}</p>`:''}<p class="intake-sub">${esc(answers.occasion)} · ${esc(toneLabel())}</p>
 <div class="intake-summary-strip">${picks.map(id=>`<span class="intake-media" data-pull="${id}"><img src="assets/constellation/thumbs/${id}.jpg" alt=""></span>`).join('')}</div>
 <dl class="intake-summary-list"><div><dt>Moment</dt><dd>${answers.scope==='group'?'Shared with a group':'Just the two of you'}</dd></div>${moments.length?`<div><dt>Collections</dt><dd>${moments.map(esc).join(', ')}</dd></div>`:''}${favs.length?`<div><dt>${esc(person)} loves</dt><dd>${favs.map(esc).join(', ')}</dd></div>`:''}${rel.length?`<div><dt>You two</dt><dd>${rel.map(esc).join(', ')}</dd></div>`:''}${(answers.messages||[]).length?`<div><dt>In your words</dt><dd>${answers.messages.length} ${answers.messages.length===1?'message':'messages'} to quote</dd></div>`:''}</dl>
-<button class="intake-start" data-intake="finish">${rec?`Start the ${esc(rec.title)}`:'Start making it'} ${ctx.icon('arrow')}</button><button class="intake-back solo" data-intake="back">Change an answer</button></div>`,pullIn);
+<button class="intake-start" data-intake="finish">${rec?`Start the ${esc(rec.cta||rec.title)}`:'Start making it'} ${ctx.icon('arrow')}</button><button class="intake-back solo" data-intake="back">Change an answer</button></div>`,pullIn);
 }
 
 /* ---------- collection viewer: swipe through a collection's photos and messages, or see them all ---------- */
@@ -220,7 +233,7 @@ function drawViewer(){
 <div class="iv-modes" role="group" aria-label="View as"><button class="${mode==='swipe'?'active':''}" data-viewer-mode="swipe" aria-pressed="${mode==='swipe'}">Swipe</button><button class="${mode==='all'?'active':''}" data-viewer-mode="all" aria-pressed="${mode==='all'}">All</button></div>
 ${mode==='swipe'?`<div class="iv-track" id="iv-track" tabindex="0" aria-label="Swipe through ${esc(label)}">${items.map((it,i)=>`<div class="iv-slide" data-i="${i}" aria-label="${i+1} of ${items.length}">${viewerItem(it,true)}</div>`).join('')}</div>
 <div class="iv-nav"><button data-viewer-step="-1" aria-label="Previous">${ctx.icon('back')}</button><span class="iv-dots" aria-hidden="true">${items.map((_,i)=>`<i class="${i===index?'on':''}"></i>`).join('')}</span><button data-viewer-step="1" aria-label="Next">${ctx.icon('arrow')}</button></div>`
-:`<div class="iv-grid">${items.map((it,i)=>`<button class="iv-cell ${it.type}" data-viewer-jump="${i}" aria-label="${it.type==='photo'?esc(it.caption):'Message: '+esc(it.text)}">${it.type==='photo'?`<img src="assets/constellation/thumbs/${it.id}.jpg" alt="">`:`<span class="${it.sender==='you'?'you':''}">${esc(it.text)}</span>`}</button>`).join('')}</div>`}
+:`<div class="iv-all">${nP?`<h3 class="iv-all-label">Photos</h3><div class="iv-grid">${items.map((it,i)=>it.type==='photo'?`<button class="iv-cell photo" data-viewer-jump="${i}" aria-label="${esc(it.caption)}"><img src="assets/constellation/thumbs/${it.id}.jpg" alt=""></button>`:'').join('')}</div>`:''}${nM?`<h3 class="iv-all-label">Messages</h3><div class="iv-thread">${items.map((it,i)=>it.type==='message'?`<button class="iv-cell message ${it.sender==='you'?'you':''}" data-viewer-jump="${i}" aria-label="Message: ${esc(it.text)}"><span>${esc(it.text)}</span></button>`:'').join('')}</div>`:''}</div>`}
 <button class="iv-include ${inc?'on':''}" data-viewer-toggle aria-pressed="${inc}">${inc?'Included in the gift ✓':'Include this collection'}</button></div>`;
   if(mode==='swipe'){const track=document.getElementById('iv-track');requestAnimationFrame(()=>{track.scrollLeft=index*track.clientWidth;});
     track.addEventListener('scroll',()=>{const i=Math.round(track.scrollLeft/track.clientWidth);if(i!==viewer?.index){viewer.index=i;el.querySelectorAll('.iv-dots i').forEach((d,k)=>d.classList.toggle('on',k===i));}},{passive:true});}

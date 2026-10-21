@@ -261,7 +261,10 @@ function frame(now){
     if(px<-400||px>W+400||py<-400||py>H+400||s<.035){if(v.shown!==false){v.el.style.visibility='hidden';v.shown=false;}v.visible=false;continue;}
     if(v.shown!==true){v.el.style.visibility='visible';v.shown=true;}
     const inFocus=!focusGroup||(v.kind!=='dot'&&v[lens]===focusGroup);
-    const blur=Math.round(Math.min(8,Math.abs(rz-focusDist)/focusDist*(focusGroup?6:9)+(inFocus?0:3))*2)/2;
+    // Sharp unless it sits behind the focal plane, fills most of the screen, or another group is in focus.
+    if(!v.bw){v.bw=v.el.offsetWidth;v.bh=v.el.offsetHeight;}
+    const fill=Math.max(v.bw*s/W,v.bh*s/H),farBlur=rz>focusDist?(rz-focusDist)/focusDist*(focusGroup?6:7):0,nearBlur=fill>.72?(fill-.72)*24:0;
+    const blur=Math.round(Math.min(8,Math.max(farBlur,nearBlur)+(inFocus?0:3))*2)/2;
     const near=Math.max(0,Math.min(1,(rz-90)/300,(4.2-s)/1.6)),far=rz>3400?Math.max(0,1-(rz-3400)/900):1;
     v.alpha=near*far*(inFocus?1:.12)*(v.kind==='dot'?.55:1);
     v.depthBlur=blur;
