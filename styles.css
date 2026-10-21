@@ -1906,3 +1906,33 @@ strong,b,h1,h2,h3,h4,h5,h6,th,dt,legend,optgroup{font-weight:400}
 @keyframes lock-out{to{opacity:0;transform:scale(1.08)}}
 @keyframes app-open{from{transform:scale(.9);opacity:.4;border-radius:38px}to{transform:none;opacity:1}}
 @media(prefers-reduced-motion:reduce){.lock-screen,.lock-screen.opening,.app-shell.is-opening #app{animation:none}.lock-note{transition:none}}
+
+/* Lock screen, round 2: exact Figma effects.
+   Liquid glass (notification + flashlight/camera): frost 5px, light from 315° at 50%, depth 16,
+   white 7% screen fill, drop shadow 0 8 40 rgba(0,0,0,.2). Refraction is approximated with the lit rim. */
+.lock-glass{-webkit-backdrop-filter:blur(5px) saturate(150%) brightness(1.06);backdrop-filter:blur(5px) saturate(150%) brightness(1.06);
+  box-shadow:0 8px 40px rgba(0,0,0,.2),inset 0 0 16px rgba(255,255,255,.07),inset 1px 1px 1px rgba(255,255,255,.28)}
+.lock-glass:after{content:'';position:absolute;inset:0;z-index:2;border-radius:inherit;padding:1px;pointer-events:none;
+  background:linear-gradient(135deg,rgba(255,255,255,.7) 0%,rgba(255,255,255,.16) 30%,rgba(255,255,255,.04) 55%,rgba(255,255,255,.12) 78%,rgba(255,255,255,.45) 100%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0)}
+.lock-note{-webkit-backdrop-filter:blur(5px) saturate(150%) brightness(1.06);backdrop-filter:blur(5px) saturate(150%) brightness(1.06)}
+.lock-note:before,.lock-controls span:before{box-shadow:none}
+/* SF Symbols, sized to their exported glyph bounds */
+.lock-sym{display:block;flex:none;mix-blend-mode:plus-lighter}
+.sym-cloud{width:25px;height:18px}
+.sym-sunset{width:14px;height:12px}
+.sym-flashlight{width:14px;height:32px;position:relative;z-index:1}
+.sym-camera{width:33px;height:26px;position:relative;z-index:1}
+/* Gauge: the whole 58×55 frame blends linear-dodge, as in Figma */
+.lock-gauge-frame{position:absolute;left:7px;top:9.6px;width:58px;height:55.387px;mix-blend-mode:plus-lighter}
+.lock-gauge-frame .lock-gauge-arc{left:0;top:0;width:58px;height:45.47px}
+.lock-gauge-frame .lock-gauge-dot{left:39.24px;top:3.5px}
+.lock-gauge-frame b{left:calc(50% - 15px);top:calc(50% - 15.03px)}
+.lock-gauge-frame small{top:44.39px}
+.lock-gauge-frame .min{left:10.5px}.lock-gauge-frame .max{left:32.5px}
+/* Clock: blur inside the digits only, then the dodge fill and glass layers on top */
+/* Masked to the digit shapes with an image mask (an SVG clipPath reference isn't honored in every browser) */
+.lock-clock-blur{position:absolute;inset:0;-webkit-backdrop-filter:blur(30px);backdrop-filter:blur(30px);
+  -webkit-mask:url(assets/lock/clock-mask.svg) center/100% 100% no-repeat;mask:url(assets/lock/clock-mask.svg) center/100% 100% no-repeat}
+/* Sunset widget: Figma's 40px background blur under the circle */
+.lock-sunset-blur{position:absolute;left:7px;top:7px;width:58px;height:58px;border-radius:100px;-webkit-backdrop-filter:blur(40px);backdrop-filter:blur(40px)}

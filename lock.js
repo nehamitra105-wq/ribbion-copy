@@ -4,13 +4,8 @@
 'use strict';
 
 const A='assets/lock/';
-// SF Symbols aren't shipped as assets, so these are small line stand-ins in the same slots.
-const SYM={
-  cloud:'<svg viewBox="0 0 20 16" fill="currentColor"><circle cx="7" cy="6" r="3.2"/><path d="M7 .6v1.6M2.2 2.4l1.1 1.1M.6 6h1.6M11.8 2.4l-1.1 1.1" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><path d="M8.5 15.5h7.2a3.3 3.3 0 0 0 .3-6.6 4.6 4.6 0 0 0-8.7 1.3 2.7 2.7 0 0 0 1.2 5.3Z"/></svg>',
-  sunset:'<svg viewBox="0 0 20 14" fill="currentColor"><path d="M3.5 11a6.5 6.5 0 0 1 13 0Z"/><path d="M10 .5v3M6.7 2.6 8 4.4M13.3 2.6 12 4.4M1 13h18" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>',
-  flashlight:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 2h10v4l-2.5 4v11a1 1 0 0 1-1 1h-3a1 1 0 0 1-1-1V10L7 6Z"/><circle cx="12" cy="14" r="1.3" fill="#2a2a2a"/></svg>',
-  camera:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8.6 5.5 10 3.6h4l1.4 1.9h3.1A2.5 2.5 0 0 1 21 8v9.5a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5V8a2.5 2.5 0 0 1 2.5-2.5Z"/><circle cx="12" cy="12.6" r="3.6" fill="#2a2a2a"/><circle cx="12" cy="12.6" r="2.4"/></svg>'
-};
+// SF Symbols exported from the Figma lock screen; each blends plus-lighter (Figma's linear dodge) like iOS.
+const sym=(name,cls)=>`<img class="lock-sym ${cls}" src="${A}sym-${name}.svg" alt="">`;
 
 function markup(){
   return `<div class="lock-screen" id="lock-screen" role="dialog" aria-label="Lock screen">
@@ -18,30 +13,46 @@ function markup(){
 <div class="lock-status" aria-hidden="true"><img class="lock-cell" src="${A}cellular.svg" alt=""><img class="lock-wifi" src="${A}wifi.svg" alt=""><span class="lock-battery"><i></i><img src="${A}battery-cap.svg" alt=""></span></div>
 <span class="lock-swipe" aria-hidden="true"></span>
 <p class="lock-date">Wed Oct 21</p>
-<div class="lock-clock" id="lock-clock" role="img" aria-label="9:41"><img src="${A}clock-fill.svg" alt=""></div>
+<div class="lock-clock" id="lock-clock" role="img" aria-label="9:41"></div>
 <div class="lock-widgets" aria-hidden="true">
-  <div class="lock-weather"><p class="lock-weather-head">${SYM.cloud}<span>72º</span></p><p>Partly Cloudy</p><p>H:88º L:64º</p></div>
+  <div class="lock-weather"><p class="lock-weather-head">${sym('cloud-sun','sym-cloud')}<span>72º</span></p><p>Partly Cloudy</p><p>H:88º L:64º</p></div>
   <div class="lock-circles">
-    <div class="lock-gauge"><img class="lock-gauge-arc" src="${A}gauge.svg" alt=""><img class="lock-gauge-dot" src="${A}gauge-indicator.svg" alt=""><b>67</b><small class="min">50</small><small class="max">78</small></div>
-    <div class="lock-sunset"><span>${SYM.sunset}<b>8:29</b><small>PM</small></span></div>
+    <div class="lock-gauge"><div class="lock-gauge-frame"><img class="lock-gauge-arc" src="${A}gauge.svg" alt=""><img class="lock-gauge-dot" src="${A}gauge-indicator.svg" alt=""><b>67</b><small class="min">50</small><small class="max">78</small></div></div>
+    <div class="lock-sunset"><i class="lock-sunset-blur"></i><span>${sym('sunset','sym-sunset')}<b>8:29</b><small>PM</small></span></div>
   </div>
 </div>
-<button class="lock-note" id="lock-note" aria-label="Ribbon notification: Maya’s birthday is coming up! Want to make her something special? Open Ribbon">
+<button class="lock-note lock-glass" id="lock-note" aria-label="Ribbon notification: Maya’s birthday is coming up! Want to make her something special? Open Ribbon">
   <img class="lock-note-icon" src="${A}app-icon.png" alt="">
   <span class="lock-note-text"><strong>Ribbon</strong><span>Maya’s birthday is coming up! Want to make her something special?</span></span>
   <time>9:30 AM</time>
 </button>
-<div class="lock-controls" aria-hidden="true"><span>${SYM.flashlight}</span><span>${SYM.camera}</span></div>
+<div class="lock-controls" aria-hidden="true"><span class="lock-glass">${sym('flashlight','sym-flashlight')}</span><span class="lock-glass">${sym('camera','sym-camera')}</span></div>
 <span class="lock-home-bar" aria-hidden="true"></span>
 </div>`;
 }
 
+/* The 9:41 from Figma: a 30px background blur inside the digits, a color-dodge fill plus 35% white,
+   and a glass layer lit from the top-left (light angle 315°). Figma exports the blur as an unclipped
+   foreignObject (it showed as a box), so the blur is rebuilt as a clipped HTML layer instead. */
+function clockSVG(raw){
+  const path=(raw.match(/<path id="stroke0_0_101" d="([^"]+)"/)||[])[1];if(!path)return raw.replace(/<foreignObject[\s\S]*?<\/foreignObject>/,'');
+  return `<div class="lock-clock-blur" aria-hidden="true"></div>
+<svg width="205.06" height="87.4004" viewBox="0 0 205.06 87.4004" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+<defs><path id="lock-941" d="${path}"/><clipPath id="lock-941-clip"><use href="#lock-941"/></clipPath>
+<linearGradient id="lock-941-sheen" x1="0" y1="0" x2="205" y2="87.4" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset=".45" stop-color="#fff" stop-opacity=".08"/><stop offset="1" stop-color="#fff" stop-opacity=".3"/></linearGradient>
+<linearGradient id="lock-941-rim" x1="0" y1="0" x2="205" y2="87.4" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fff" stop-opacity=".95"/><stop offset=".5" stop-color="#fff" stop-opacity=".25"/><stop offset="1" stop-color="#fff" stop-opacity=".7"/></linearGradient></defs>
+<use href="#lock-941" fill="#949494" style="mix-blend-mode:color-dodge"/>
+<use href="#lock-941" fill="#F5F5F5" fill-opacity=".35"/>
+<use href="#lock-941" fill="url(#lock-941-sheen)" style="mix-blend-mode:screen"/>
+<g clip-path="url(#lock-941-clip)"><use href="#lock-941" stroke="url(#lock-941-rim)" stroke-width="2.4" fill="none"/></g>
+</svg>`;
+}
 function show(){
   const shell=document.querySelector('.app-shell');if(!shell||document.getElementById('lock-screen'))return;
   shell.insertAdjacentHTML('beforeend',markup());shell.classList.add('is-locked');window.scrollTo(0,0);
   const lock=document.getElementById('lock-screen'),note=document.getElementById('lock-note');
   // Inline the clock so its color-dodge and backdrop blur composite with the wallpaper, as in iOS.
-  fetch(A+'clock-fill.svg').then(r=>r.ok?r.text():Promise.reject()).then(svg=>{const c=document.getElementById('lock-clock');if(c)c.innerHTML=svg;}).catch(()=>{});
+  fetch(A+'clock-fill.svg').then(r=>r.ok?r.text():Promise.reject()).then(svg=>{const c=document.getElementById('lock-clock');if(c)c.innerHTML=clockSVG(svg);}).catch(()=>{});
   // The notification arrives a beat after the lock screen settles.
   setTimeout(()=>{note.classList.add('in');note.focus({preventScroll:true});},matchMedia('(prefers-reduced-motion: reduce)').matches?0:900);
   note.addEventListener('click',()=>open(lock),{once:true});
