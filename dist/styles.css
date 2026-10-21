@@ -1944,40 +1944,8 @@ strong,b,h1,h2,h3,h4,h5,h6,th,dt,legend,optgroup{font-weight:400}
 .intake-tone-handle{width:32px;height:32px;border-radius:5px;border:1px solid #853f10;overflow:hidden;box-shadow:none!important;
   background:radial-gradient(293.5% 293.5% at 112.5% 134.4%,#ffc096 15.596%,#eea677 17.975%,#dd8d57 20.353%,#cc7337 22.732%,#bb5917 25.11%,#884111 35.38%,#55280b 45.65%)}
 
-/* "Some ideas for …" cards (Figma 192:117 / 128:227): no card fill and no blur. The photo, at 64% over
-   #140f0c (≈ brightness .64 plus a lifted black), is screened straight onto the warm page behind it,
-   so shadows take on the orange and highlights stay bright. Other cards keep the blurred treatment. */
-.ribbon-home .home-idea{isolation:auto;background:transparent!important;box-shadow:none}
-.ribbon-home .home-idea .home-idea-photo{top:0;left:0;width:100%;height:100%;filter:sepia(.18) brightness(.88) contrast(1.04) saturate(1.08)!important;mix-blend-mode:screen;opacity:1}
-.ribbon-home .home-idea:before{opacity:1;mix-blend-mode:normal;background:linear-gradient(180deg,transparent 35%,rgba(85,40,11,.38) 100%)}
-.ribbon-home .home-idea:after{display:block;content:'';position:absolute;inset:0;z-index:1;border-radius:inherit;pointer-events:none;box-shadow:inset 0 0 0 .75px rgba(255,255,255,.18);background:none;-webkit-backdrop-filter:none;backdrop-filter:none;height:auto;top:0;bottom:0}
-/* Orange screened over each idea photo (as in Figma 192:117): darks lift to warm orange, lights stay bright */
-.ribbon-home .home-idea .home-idea-photo{filter:brightness(.92) contrast(1.05)!important;mix-blend-mode:normal}
-.ribbon-home .home-idea:before{opacity:1;mix-blend-mode:screen;background:linear-gradient(160deg,#c9561c 0%,#b8461a 55%,#9a3912 100%)}
+/* "Moments together" stays on one line */
 .ribbon-home .home-idea-book .home-idea-label{max-width:none;white-space:nowrap}
-/* Keep the blend inside each card so the rounded corners clip it, then darken under the titles */
-.ribbon-home .home-idea{isolation:isolate}
-.ribbon-home .home-idea .home-idea-photo,.ribbon-home .home-idea:before{border-radius:inherit}
-/* Darker from the top-left corner (behind the template tag) and along the bottom (behind the title) */
-.ribbon-home .home-idea:after{background:radial-gradient(58% 85% at 100% 40%,rgba(255,206,160,.3) 0%,rgba(255,180,120,.12) 50%,rgba(255,180,120,0) 100%),radial-gradient(210px 120px at 0 0,rgba(34,10,3,.86) 0%,rgba(34,10,3,.55) 42%,rgba(34,10,3,0) 100%),linear-gradient(180deg,rgba(45,16,5,.18) 0%,rgba(45,16,5,.28) 45%,rgba(40,13,4,.62) 100%)}
-.ribbon-home .home-idea:after{-webkit-mask-image:none;mask-image:none}
-/* A warm light coming in on the right of each idea card: lightest at its center, fading toward the middle */
-.ribbon-home .home-idea:before{background:radial-gradient(60% 85% at 100% 40%,rgba(255,214,168,.62) 0%,rgba(255,170,110,.3) 45%,rgba(255,150,90,0) 100%),linear-gradient(160deg,#c9561c 0%,#b8461a 55%,#9a3912 100%)}
-/* Tiny light glares (Figma 128:277): two soft four-point stars at the card edges, kept very faint */
-.home-idea-glare{position:absolute;inset:0;z-index:1;overflow:hidden;border-radius:inherit;pointer-events:none;mix-blend-mode:screen;opacity:.38}
-.home-idea-glare i{position:absolute;background:url(assets/warm/glare-star-1.png) center/contain no-repeat}
-.home-idea-glare i:first-child{width:155px;height:154px;right:-50px;top:-74px;transform:rotate(-16.43deg)}
-.home-idea-glare i:last-child{width:87px;height:86px;left:-37px;bottom:-36px;transform:rotate(88.39deg);background-image:url(assets/warm/glare-star-2.png)}
-.home-idea-capsule .home-idea-glare i:first-child{right:auto;left:-46px;top:-80px}
-.home-idea-capsule .home-idea-glare i:last-child{left:auto;right:-34px;bottom:-40px}
-.home-idea-glare{z-index:2;mix-blend-mode:normal;opacity:.5}
-.home-idea-glare i:first-child{width:118px;height:117px;right:-26px;top:-38px}
-.home-idea-glare i:last-child{width:70px;height:69px;left:-18px;bottom:-14px}
-.home-idea-capsule .home-idea-glare i:first-child{right:auto;left:-30px;top:-44px}
-.home-idea-capsule .home-idea-glare i:last-child{left:auto;right:-16px;bottom:-18px}
-/* Glares softened to a formless warm bloom: heavy blur, shifted from yellow toward the cards' peach */
-.home-idea-glare i{filter:blur(16px) hue-rotate(-22deg) saturate(.85) brightness(1.08)}
-.home-idea-glare{opacity:.55}
 
 /* Collection viewer swipe: a looping fan of 3:4 cards pivoting on a point below, details top-left on each */
 .iv-fan{position:relative;flex:1;min-height:0;margin-top:18px;touch-action:pan-y;user-select:none;-webkit-user-select:none;outline:none;cursor:grab}
@@ -2129,3 +2097,60 @@ code,kbd,samp,pre{font-family:var(--font-text)}
 .tpl-pick-jeo .tpl-pick-art i{height:28px;font-size:12px;font-weight:400}
 .tpl-pick-beli .tpl-pick-art{grid-template-columns:repeat(3,24px);gap:2px}
 .tpl-pick-beli .tpl-pick-art i{width:24px;height:24px;border-width:1.5px;font-size:12px;font-weight:400;letter-spacing:-.04em}
+
+/* Occasion tiles: the idea-card treatment. A photo that fits the occasion, an orange screen over it, darker
+   from the top-left and bottom for the label, and a soft warm light coming in on the right */
+.intake-tiles .intake-tile.glow-0{--occ:url(assets/intake/occasion-birthday.jpg)}
+.intake-tiles .intake-tile.glow-1{--occ:url(assets/intake/occasion-graduation.jpg)}
+.intake-tiles .intake-tile.glow-2{--occ:url(assets/intake/occasion-moving.jpg)}
+.intake-tiles .intake-tile.glow-3{--occ:url(assets/intake/occasion-just-because.jpg)}
+.intake-tiles .intake-tile.glow-4{--occ:url(assets/intake/occasion-sorry.jpg)}
+.intake-tiles .intake-tile.glow-5{--occ:url(assets/intake/occasion-friendiversary.jpg)}
+.intake-tiles .intake-tile:not(.intake-tile-own){
+  background:radial-gradient(150px 90px at 0 0,rgba(34,10,3,.7),rgba(34,10,3,0)),linear-gradient(180deg,rgba(45,16,5,.15) 0%,rgba(45,16,5,.25) 45%,rgba(40,13,4,.62) 100%),linear-gradient(160deg,#c9561c 0%,#b8461a 55%,#9a3912 100%),var(--occ) center/cover no-repeat!important;
+  background-blend-mode:normal,normal,screen,normal!important}
+.intake-tiles .intake-tile:not(.intake-tile-own):before{inset:0;filter:blur(10px);opacity:.6;mix-blend-mode:screen;
+  background:radial-gradient(60% 85% at 100% 40%,rgba(255,206,160,.75) 0%,rgba(255,170,110,.25) 50%,rgba(255,170,110,0) 100%)!important}
+/* Reels: mute sits under the pause indicator and only shows while the reel is paused */
+.reels-sound{position:absolute;z-index:5;left:50%;top:calc(50% + 48px);transform:translateX(-50%);background:rgba(0,0,0,.32);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);opacity:0;pointer-events:none;transition:opacity .2s}
+.reels.is-paused .reels-sound{opacity:1;pointer-events:auto}
+/* "More …, coming soon" reads like the home subheaders */
+.tpl-section-label{margin:22px 4px 2px;font:400 var(--type-section)/var(--leading) var(--font-text);letter-spacing:var(--tracking);color:#fff}
+
+/* Quiz background: a warm glow in the middle that falls off to near-black edges */
+.intake-screen{background:
+  radial-gradient(55% 38% at 50% 58%,rgba(255,178,96,.55) 0%,rgba(255,120,48,.28) 45%,rgba(255,110,40,0) 100%),
+  radial-gradient(95% 70% at 50% 60%,#e2611f 0%,#a8400f 30%,#5a1f06 58%,#1c0903 82%,#070302 100%)}
+
+/* No grey text on the warm dark screens: secondary text is translucent white instead */
+:root{--muted:rgba(255,255,255,.6)}
+#app .screen:not(.beli):not(.web-screen) :is(.muted,.micro,.subheading,.settings-label,.settings-footnote,.text-button,.source-note,.footer-note,.date-empty,.draft-more,.preview-label,.occasion-label,.calendar-settings-link,.identity-block>p,summary,label>span,.sliders label,.memory-toolbar span,.tone-labels,.field small,.import-hint),
+#app .screen:not(.beli):not(.web-screen) .settings-row small,#app .screen:not(.beli):not(.web-screen) .draft-card-foot,
+#app .screen:not(.beli):not(.web-screen) .contact-row small,#app .screen:not(.beli):not(.web-screen) .saved-contact-summary small{color:rgba(255,255,255,.6)!important}
+.reader:not(.paper-reader) :is(.preview-label,.occasion-label){color:rgba(255,255,255,.7)!important}
+#app .screen :is(.section-head>span,.import-messages>p,.add-memory small,.source-strip span,.connection p){color:rgba(255,255,255,.6)!important}
+#app .screen .quote-memory p{color:rgba(255,255,255,.88)!important}
+#app .screen label>span>small{color:rgba(255,255,255,.6)!important}
+/* Quiz background: a small, concentrated orange circle in the middle, with wide dark edges (no pale core) */
+.intake-screen{background:radial-gradient(circle at 50% 56%,#e0601e 0%,#b8470f 12%,#7a2a08 26%,#3a1205 42%,#140603 60%,#060201 80%)}
+.intake-stage:before{display:none}
+/* Room for the iOS Dynamic Island: the back-arrow row sits as low as on the template pickers */
+.upcoming-screen>.topbar,.gift-screen>.topbar{padding-top:52px!important;padding-bottom:16px;height:112px;align-items:center}
+
+/* Calendar: no dots under the dates */
+.cal-grid.expanded .cal-passed:after,.cal-grid.expanded .cal-cell:after{content:none}
+/* Quiz background: the reference inverted. A warm light pooled left of centre, ringed by orange and red,
+   falling off to near-black where the reference was brightest */
+.intake-screen{background:radial-gradient(ellipse 72% 46% at 50% 50%,#ffb47a 0%,#ff8a3a 16%,#f2541a 32%,#c2220c 48%,#6e0c05 64%,#260402 80%,#090101 100%)}
+/* The centre veil was a brown wash that greyed the glow; keep only a faint warm deepening for legibility */
+.intake-veil{background:radial-gradient(72% 42% at 50% 44%,rgba(150,40,8,.28) 0%,rgba(150,40,8,0) 100%)!important}
+/* Quiz glow: a circle, dimmer, with long soft falloffs so the rings blend into each other */
+.intake-screen{background:radial-gradient(circle at 50% 50%,#e89462 0%,#e07a3e 8%,#d25a26 18%,#b23e17 28%,#8a2a0e 38%,#5e1a08 48%,#3a0f05 58%,#1e0703 70%,#0c0302 84%,#070101 100%)}
+/* Quiz glow, shifted from red toward orange */
+.intake-screen{background:radial-gradient(circle at 50% 50%,#f0a466 0%,#ea8c42 8%,#de7026 18%,#c45616 28%,#9a3f0c 38%,#6c2b08 48%,#431a05 58%,#230d03 70%,#0e0502 84%,#070201 100%)}
+/* Quiz: a touch of film grain, and the glow a little dimmer */
+.intake-screen:after{opacity:.2}
+.intake-screen{background:radial-gradient(circle at 50% 50%,#d88e58 0%,#d27a38 8%,#c26222 18%,#a84a12 28%,#84360a 38%,#5c2507 48%,#391604 58%,#1e0b03 70%,#0c0402 84%,#060201 100%)}
+/* Home hero: the person's contact picture beside the occasion */
+.home-hero-title{display:flex;align-items:center;gap:12px}
+.hero-avatar{width:36px;height:36px;font-size:15px;flex:none}
