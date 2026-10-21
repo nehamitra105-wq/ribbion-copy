@@ -143,7 +143,7 @@ function giftQuizPreview(){
 }
 function gift(){const when=new Date(state.date+'T12:00:00'),days=Math.round((Date.parse(state.date+'T00:00:00Z')-Date.parse(todayISO()+'T00:00:00Z'))/864e5),person=esc(state.person);
 return `<section class="screen gift-screen glass-screen">${atmosphere()}<header class="topbar"><button class="icon-button" data-go="home" aria-label="Back to home">${icon('back')}</button><span></span><span style="width:44px"></span></header>
-<h1 class="gift-title">${person}’s Gift</h1><p class="gift-meta">${esc(state.occasion)} · ${when.toLocaleDateString('en',{weekday:'long',month:'long',day:'numeric'})}${days>1?` · ${days} days away`:days===1?' · Tomorrow':days===0?' · Today':''}</p>
+<h1 class="gift-title">${person}’s Gift</h1>
 <div class="gift-content"><h2 class="gift-section">Not sure where to start?</h2>
 <button class="gift-card gift-card-web" data-go="constellation">${giftWebPreview()}<span class="gift-card-copy"><strong>Explore ${person}’s Web</strong><span>Every photo and message, connected by place, time, and memory.</span></span></button>
 <button class="gift-card gift-card-quiz" data-action="gift-quiz">${giftQuizPreview()}<span class="gift-card-copy"><strong>Take a quick quiz to get started</strong><span>Let us help you decide the perfect gift with the right questions</span></span></button>
