@@ -73,7 +73,7 @@ function pickerMarkup(c){ctx=c;cap=load();return `<section class="screen tpl-pic
 <div class="tpl-picks">
 <button class="cap-hero" data-go="capsuleSetup">${backdrop()}<span class="cap-hero-copy"><small>One-time capsule</small><strong>Hey...<br>Remember when we first met?</strong></span><span class="cap-hero-foot"><span>A story of this moment, sealed until a date you choose.</span>${c.icon('arrow')}</span></button>
 <p class="tpl-section-label">Mini capsules</p>
-<div class="cap-minis">${[['capsuleDaily','Daily','A fortune or affirmation from you, every morning.','“You’re braver than you think.”'],['capsuleMonthly','Monthly','A photo and a note that changes each month.','October with you'],['capsuleYearly','Yearly','A letter that unlocks every birthday.','Oct 24 · Chapter 2']].map(([go,t,d,w])=>`<button class="cap-mini" data-go="${go}"><span class="cap-widget-mini"><small>${esc(t)}</small>${esc(w)}</span><strong>${t}</strong><span>${d}</span></button>`).join('')}</div>
+<div class="cap-minis">${[['capsuleDaily','Daily','A fortune or affirmation from you, every morning.','“You can do it!”'],['capsuleMonthly','Monthly','A photo and a note that changes each month.','October with you'],['capsuleYearly','Yearly','A letter that unlocks every birthday.','Oct 24 · Chapter 2']].map(([go,t,d,w])=>`<button class="cap-mini" data-go="${go}"><span class="cap-widget-mini"><small>${esc(t)}</small>${esc(w)}</span><strong>${t}</strong><span>${d}</span></button>`).join('')}</div>
 </div></section>`;}
 
 /* ---------------- Setup: title + open date ---------------- */
