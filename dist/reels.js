@@ -63,6 +63,15 @@ const CONCEPTS=[
   ['slides','Photo slideshow','Your favorite photos with captions and music.'],
   ['memes','Messages as memes','Your funniest texts, turned into memes.']
 ];
+// Small photo mockups for each storybook concept, in the app's minimal style.
+const P=id=>`assets/constellation/thumbs/${id}.jpg`;
+const CONCEPT_ART={
+  book:`<i class="cb-page"><img src="${P('m05')}" alt=""></i><i class="cb-page"><img src="${P('m18')}" alt=""></i>`,
+  postcard:`<i class="cp-card"><img src="${P('m11')}" alt=""><b class="cp-stamp"></b></i>`,
+  vlog:`<img class="cv-shot" src="${P('m16')}" alt=""><b class="cv-play"></b><b class="cv-bar"><i></i></b>`,
+  slides:`<img class="cs-shot" src="${P('m19')}" alt=""><b class="cs-dots"><i></i><i></i><i></i></b>`,
+  memes:`<img class="cm-shot" src="${P('m17')}" alt=""><b class="cm-top">me at 2am</b><b class="cm-bottom">lol</b>`
+};
 function pickerMarkup(c){return `<section class="screen tpl-picker ribbon-home glass-screen">${c.atmosphere()}
 <header class="tpl-top"><button class="icon-button" data-go="home" aria-label="Back to home">${c.icon('back')}</button><span></span><span class="tpl-spacer"></span></header>
 <div class="tpl-intro"><h1>Pick a storybook</h1><p>Tell the story of you and ${esc(c.person)} as something to watch, flip or send.</p></div>
@@ -70,7 +79,7 @@ function pickerMarkup(c){return `<section class="screen tpl-picker ribbon-home g
 <button class="tpl-pick tpl-pick-reels" data-go="reels"><span class="tpl-pick-art" aria-hidden="true"><img src="assets/reels/posters/v2.jpg" alt=""><i class="reels-mini-rail">${SVG.heart}${SVG.comment}${SVG.send}</i><i class="reels-mini-bar"></i></span><span><strong>Reel recap</strong><small>Clips and wishes from ${esc(c.person)}’s friends, cut together like a reel.</small></span>${c.icon('arrow')}</button>
 <button class="tpl-pick tpl-pick-memory" data-create-format="storybook"><span class="tpl-pick-art" aria-hidden="true"><img src="assets/constellation/thumbs/m05.jpg" alt=""><img src="assets/constellation/thumbs/m15.jpg" alt=""></span><span><strong>Classic storybook</strong><small>Chapters of your moments, in your own words.</small></span>${c.icon('arrow')}</button>
 <p class="tpl-section-label">More ideas, coming soon</p>
-${CONCEPTS.map(([k,t,d])=>`<button class="tpl-pick tpl-concept" data-reels-concept="${esc(t)}"><span class="tpl-pick-art concept-${k}" aria-hidden="true"></span><span><strong>${t}</strong><small>${d}</small></span><span class="tpl-soon">Concept</span></button>`).join('')}
+${CONCEPTS.map(([k,t,d])=>`<button class="tpl-pick tpl-concept" data-reels-concept="${esc(t)}"><span class="tpl-pick-art concept-${k}" aria-hidden="true">${CONCEPT_ART[k]||''}</span><span><strong>${t}</strong><small>${d}</small></span><span class="tpl-soon">Concept</span></button>`).join('')}
 </div></section>`;}
 
 /* ------------------------------------------------ Reel feed */
