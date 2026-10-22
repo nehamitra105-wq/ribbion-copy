@@ -6,6 +6,7 @@
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const store={get(k,f){try{const v=JSON.parse(localStorage.getItem(k));return v??f;}catch{return f;}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch{}}};
 const SVG={
+  save:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v10M8 10l4 4 4-4M5 19h14"/></svg>',
   heart:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-8.8 1 5.5 5.5 0 0 0-8.8-1C-1 9 5 15 12 21c7-6 13-12 8.8-16.4Z"/></svg>',
   comment:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-12.3 7.5L3 21l2-5.4A8.5 8.5 0 1 1 21 11.5Z"/></svg>',
   send:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4 20-7ZM22 2 11 13"/></svg>',
@@ -105,7 +106,7 @@ function feedMarkup(c,m){
 <span class="reels-paused" aria-hidden="true">${SVG.play}</span><button class="reels-icon reels-sound" data-reels-sound aria-pressed="false" aria-label="Turn sound on">${SVG.muted}</button>
 <div class="reels-rail" id="reels-rail"><button data-reels-like aria-pressed="false" aria-label="Like"><span>${SVG.heart}</span><small id="reels-likes">0</small></button><button data-reels-comments aria-label="Comments"><span>${SVG.comment}</span><small id="reels-comment-count">0</small></button><button data-reels-share aria-label="Share"><span>${SVG.send}</span><small>Share</small></button></div>
 <div class="reels-progress" aria-hidden="true"><i id="reels-progress"></i></div>
-${edit?`<nav class="reels-bar" aria-label="Reel actions"><button data-reels-jump-empty>${SVG.plus}<span>Add</span></button><button data-go="reelsPreview">${SVG.eye}<span>Preview</span></button><button class="primary" data-go="reelsSend">${SVG.send}<span>Send</span></button></nav>`:m==='preview'?`<nav class="reels-bar"><button data-go="reels">${c.icon('back')}<span>Keep editing</span></button><button class="primary" data-go="reelsSend">${SVG.send}<span>Send</span></button></nav>`:''}
+${edit?`<nav class="reels-bar" aria-label="Reel actions"><button data-reels-jump-empty>${SVG.plus}<span>Add</span></button><button data-go="reelsPreview">${SVG.eye}<span>Preview</span></button><button data-action="save-draft">${SVG.save}<span>Save</span></button><button class="primary" data-go="reelsSend">${SVG.send}<span>Send</span></button></nav>`:m==='preview'?`<nav class="reels-bar"><button data-go="reels">${c.icon('back')}<span>Keep editing</span></button><button class="primary" data-go="reelsSend">${SVG.send}<span>Send</span></button></nav>`:''}
 <div class="reels-sheet-scrim" id="reels-scrim" hidden></div><div class="reels-sheet" id="reels-sheet" role="dialog" aria-modal="true" hidden></div>
 <input type="file" id="reels-file" accept="image/*,video/*" multiple hidden>
 </section>`;

@@ -2211,3 +2211,15 @@ code,kbd,samp,pre{font-family:var(--font-text)}
 .intake-tiles .intake-tile:not(.intake-tile-own):after{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;border-radius:inherit;
   background:url(assets/warm/glare-star-1.png) no-repeat right -26px top -30px/86px auto,url(assets/warm/glare-star-2.png) no-repeat left -14px bottom -16px/46px auto;
   filter:blur(14px) hue-rotate(-22deg) saturate(.85) brightness(1.08);opacity:.5}
+
+/* Save-as-draft buttons in the editors */
+.jeo-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.jeo-save{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 18px;border-radius:var(--radius-pill);background:rgba(255,255,255,.12);color:#fff;font-size:14px}
+.jeo-save svg{width:17px;height:17px}
+.cap-widget-actions{display:flex;gap:10px;align-items:center}
+.cap-widget-actions>*{flex:1}
+.cap-widget-actions .cap-ghost svg{width:16px;height:16px}
+.cap-toolbar{gap:2px;padding:0 6px}
+.cap-toolbar button{min-width:0;flex:1}
+.cap-widget-actions{margin-top:14px}.cap-widget-actions .cap-primary{margin-top:0}.cap-widget-actions .cap-ghost{min-height:50px}
+.jeo-actions .jeo-primary{width:auto;flex:1;min-width:180px}

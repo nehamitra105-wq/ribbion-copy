@@ -7,6 +7,7 @@ const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const store={get(k,f){try{const v=JSON.parse(localStorage.getItem(k));return v??f;}catch{return f;}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch{}}};
 const icon=d=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
 const I={
+  save:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v10M8 10l4 4 4-4M5 19h14"/></svg>',
   play:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg>',
   pause:'<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6.5" y="5" width="4" height="14" rx="1"/><rect x="13.5" y="5" width="4" height="14" rx="1"/></svg>',
   plus:icon('<path d="M12 5v14M5 12h14"/>'),
@@ -106,7 +107,7 @@ return `<section class="screen cap-screen cap-editor">${backdrop()}
 <div class="cap-row"><button class="cap-add" data-cap-tool="clip" aria-label="Add clips">${I.plus}</button><div class="cap-track" id="cap-track" aria-label="Clip timeline. Scroll to scrub, hold to cut or delete."><div class="cap-strip" id="cap-strip"></div></div><span class="cap-playhead" aria-hidden="true"><b></b></span></div>
 <div class="cap-row"><button class="cap-disc ${cap.song?'has-song':''}" data-cap-tool="song" aria-label="${cap.song?'Change song':'Add a song'}"><span></span></button><button class="cap-audio" data-cap-tool="song" id="cap-audio">${audioLabel()}</button></div>
 </div>
-<nav class="cap-toolbar" aria-label="Editing tools">${[['clip','Clip',I.plus],['text','Text',I.text],['cut','Cut',I.cut],['delete','Delete',I.trash],['undo','Undo',I.undo]].map(([k,l,svg])=>`<button data-cap-tool="${k}"><span>${svg}</span><small>${l}</small></button>`).join('')}</nav>
+<nav class="cap-toolbar" aria-label="Editing tools">${[['clip','Clip',I.plus],['text','Text',I.text],['cut','Cut',I.cut],['delete','Delete',I.trash],['undo','Undo',I.undo]].map(([k,l,svg])=>`<button data-cap-tool="${k}"><span>${svg}</span><small>${l}</small></button>`).join('')}<button data-action="save-draft"><span>${I.save}</span><small>Save</small></button></nav>
 <div class="cap-menu" id="cap-menu" role="menu" hidden><button data-cap-menu="cut" role="menuitem">${I.cut} Cut here</button><button data-cap-menu="delete" role="menuitem">${I.trash} Delete clip</button><button data-cap-menu="cancel" role="menuitem">Cancel</button></div>
 <div class="cap-full" id="cap-full" hidden><button class="cap-full-close" data-cap-close aria-label="Close full screen preview">${c.icon('close')}</button>${stageHTML('full')}<div class="cap-full-bar"><i id="cap-full-fill"></i></div></div>
 <div class="cap-sheet-scrim" id="cap-scrim" hidden></div><div class="cap-sheet" id="cap-sheet" role="dialog" aria-modal="true" hidden></div>
@@ -255,7 +256,7 @@ return `<section class="screen cap-screen cap-widget-screen">${backdrop('m05')}
 <div class="cap-widget-form"><h1>${w.title}</h1><p>${w.when} on ${esc(c.person)}’s home screen. Edit what they’ll see.</p>
 <ol class="cap-entries" id="cap-entries">${items.map((x,i)=>`<li><textarea rows="1" data-cap-entry="${i}" aria-label="Entry ${i+1}">${esc(x)}</textarea></li>`).join('')}</ol>
 <button class="cap-ghost" data-cap-entry-add>${I.plus} Add another</button>
-<button class="cap-primary" data-cap-widget-save>Set up the widget</button></div></section>`;};}
+<div class="cap-widget-actions"><button class="cap-ghost" data-action="save-draft">${I.save} Save draft</button><button class="cap-primary" data-cap-widget-save>Set up the widget</button></div></div></section>`;};}
 function widgetMount(name){return (c,bind)=>{ctx=c;const root=document.querySelector('.cap-widget-screen');if(!root)return;const k=`ribbon-${name}-v1-${c.person}`,w=WIDGETS[name];
   const items=()=>[...root.querySelectorAll('[data-cap-entry]')].map(x=>x.value.trim()).filter(Boolean);
   const refresh=()=>{const list=items();store.set(k,list);document.getElementById('cap-widget').innerHTML=w.widget(list.length?list:w.items);};

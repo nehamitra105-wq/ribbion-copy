@@ -6,6 +6,7 @@
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const store={get(k,f){try{const v=JSON.parse(localStorage.getItem(k));return v??f;}catch{return f;}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch{}}};
 const SVG={
+  save:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v10M8 10l4 4 4-4M5 19h14"/></svg>',
   trash:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 11v6M14 11v6"/></svg>',
   eye:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>',
   send:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4 20-7ZM22 2 11 13"/></svg>',
@@ -37,7 +38,6 @@ function seedBeli(p){return {title:`${p}’s Beli Trivia`,questions:[
 const beli=()=>store.get(beliKey(),null)||seedBeli(ctx.person);
 const saveBeli=d=>store.set(beliKey(),d);
 const reveals=d=>d.revealAnswers!==false;
-const revealHelp=d=>reveals(d)?`After each question, friends see ${esc(ctx.person)}’s answer.`:`Friends only see their score. Answers show on ${esc(ctx.person)}’s results.`;
 function isCorrect(q,a){
   if(a===undefined||a===null)return false;
   if(q.type==='number')return Math.abs(a-q.answer)<=Math.max(1,(q.max-q.min)*.08);
@@ -69,10 +69,10 @@ const pages={
   beli(){const d=beli();return `<section class="screen beli beli-editor">
 <header class="tpl-top"><button class="icon-button" data-go="triviaTemplates" aria-label="Back to templates">${ctx.icon('back')}</button><input class="beli-title-input" data-beli-title value="${esc(d.title)}" aria-label="Quiz title"><span class="tpl-spacer"></span></header>
 <p class="beli-hint">${d.questions.length} ${d.questions.length===1?'question':'questions'} to start. Edit anything, swipe left to delete.</p>
-<label class="beli-toggle"><span><strong>Show the right answer</strong><small>${revealHelp(d)}</small></span><input type="checkbox" role="switch" data-beli-reveal ${reveals(d)?'checked':''}></label>
+<label class="beli-toggle"><span><strong>Show the right answer</strong></span><input type="checkbox" role="switch" data-beli-reveal ${reveals(d)?'checked':''}></label>
 <div class="beli-list" id="beli-list">${d.questions.map(editorCard).join('')}</div>
 <div class="beli-undo" id="beli-undo" hidden><span>Question deleted</span><button data-beli-undo>Undo</button></div>
-<nav class="beli-dock" aria-label="Quiz actions"><button data-beli-add><span>${SVG.plus}</span>Add</button><button data-go="beliPlay"><span>${SVG.eye}</span>Preview</button><button data-go="beliShare"><span>${SVG.send}</span>Share</button></nav>
+<nav class="beli-dock" aria-label="Quiz actions"><button data-beli-add><span>${SVG.plus}</span>Add</button><button data-go="beliPlay"><span>${SVG.eye}</span>Preview</button><button data-action="save-draft"><span>${SVG.save}</span>Save</button><button data-go="beliShare"><span>${SVG.send}</span>Share</button></nav>
 </section>`;},
 
   beliShare(){const d=beli();return `<section class="screen beli beli-share">
@@ -97,7 +97,7 @@ ${shareCard(`For ${esc(ctx.person)}`,'See the results','Who knows your taste bes
 <header class="tpl-top"><button class="icon-button" data-go="triviaTemplates" aria-label="Back to templates">${ctx.icon('back')}</button><input class="jeo-title-input" data-jeo-title value="${esc(g.title)}" aria-label="Board title"><span class="tpl-spacer"></span></header>
 <p class="jeo-hint">Five categories to start. Rename a category or tap a value to edit its clue.</p>
 <div class="jeo-rows">${g.categories.map((c,ci)=>`<div class="jeo-row"><input class="jeo-cat-input" data-jeo-cat="${ci}" value="${esc(c.name)}" aria-label="Category ${ci+1} name"><div class="jeo-values">${c.clues.map((cl,i)=>`<button class="jeo-value" data-jeo-edit="${ci}-${i}" aria-expanded="false">$${cl.v}</button>`).join('')}</div><div class="jeo-clue-edit" id="jeo-edit-${ci}" hidden></div></div>`).join('')}</div>
-<div class="jeo-actions"><button class="jeo-primary" data-go="jeopardyShare">Make the board ${ctx.icon('arrow')}</button></div>
+<div class="jeo-actions"><button class="jeo-save" data-action="save-draft">${SVG.save} Save draft</button><button class="jeo-primary" data-go="jeopardyShare">Make the board ${ctx.icon('arrow')}</button></div>
 </section>`;},
 
   jeopardyShare(){const g=jeo();return `<section class="screen jeo jeo-share">
@@ -125,10 +125,10 @@ ${answerEditor(q)}
 </div></article>`;
 }
 function answerEditor(q){
-  if(q.type==='rating')return `<div class="beli-rating">${RATING.map(([k,l])=>`<button class="beli-circle ${k} ${q.answer===k?'correct':''}" data-beli-answer="${q.id}:${k}" aria-pressed="${q.answer===k}">${l}</button>`).join('')}</div><p class="beli-caption">Tap the right answer</p>`;
-  if(q.type==='number')return `<div class="beli-slider"><output style="--p:${(q.answer-q.min)/(q.max-q.min)*100}%">${q.answer}</output><input type="range" min="${q.min}" max="${q.max}" value="${q.answer}" data-beli-range="${q.id}" aria-label="Correct answer"><div class="beli-range-ends"><input type="number" value="${q.min}" data-beli-min="${q.id}" aria-label="Lowest value"><input type="number" value="${q.max}" data-beli-max="${q.id}" aria-label="Highest value"></div></div><p class="beli-caption">Drag to the right answer</p>`;
-  if(q.type==='choice')return `<div class="beli-options">${q.options.map((o,i)=>`<div class="beli-option ${q.answer===i?'correct':''}"><button class="beli-radio" data-beli-answer="${q.id}:${i}" aria-label="Mark as correct" aria-pressed="${q.answer===i}"></button><input value="${esc(o)}" data-beli-option="${q.id}:${i}" aria-label="Option ${i+1}">${q.options.length>2?`<button class="beli-option-x" data-beli-remove-option="${q.id}:${i}" aria-label="Remove option">${SVG.x}</button>`:''}</div>`).join('')}${q.options.length<5?`<button class="beli-add-option" data-beli-add-option="${q.id}">${SVG.plus} Add option</button>`:''}</div><p class="beli-caption">Mark the right answer</p>`;
-  return `<div class="beli-slider beli-score-slider"><span class="beli-score big ${scoreClass(q.answer)}" data-beli-score-badge="${q.id}">${Number(q.answer).toFixed(1)}</span><input type="range" min="0" max="10" step="0.1" value="${q.answer}" data-beli-range="${q.id}" aria-label="Correct score"><div class="beli-range-ends static"><span>0.0</span><span>10.0</span></div></div><p class="beli-caption">Set ${esc(ctx.person)}’s real score</p>`;
+  if(q.type==='rating')return `<div class="beli-rating">${RATING.map(([k,l])=>`<button class="beli-circle ${k} ${q.answer===k?'correct':''}" data-beli-answer="${q.id}:${k}" aria-pressed="${q.answer===k}">${l}</button>`).join('')}</div>`;
+  if(q.type==='number')return `<div class="beli-slider"><output style="--p:${(q.answer-q.min)/(q.max-q.min)*100}%">${q.answer}</output><input type="range" min="${q.min}" max="${q.max}" value="${q.answer}" data-beli-range="${q.id}" aria-label="Correct answer"><div class="beli-range-ends"><input type="number" value="${q.min}" data-beli-min="${q.id}" aria-label="Lowest value"><input type="number" value="${q.max}" data-beli-max="${q.id}" aria-label="Highest value"></div></div>`;
+  if(q.type==='choice')return `<div class="beli-options">${q.options.map((o,i)=>`<div class="beli-option ${q.answer===i?'correct':''}"><button class="beli-radio" data-beli-answer="${q.id}:${i}" aria-label="Mark as correct" aria-pressed="${q.answer===i}"></button><input value="${esc(o)}" data-beli-option="${q.id}:${i}" aria-label="Option ${i+1}">${q.options.length>2?`<button class="beli-option-x" data-beli-remove-option="${q.id}:${i}" aria-label="Remove option">${SVG.x}</button>`:''}</div>`).join('')}${q.options.length<5?`<button class="beli-add-option" data-beli-add-option="${q.id}">${SVG.plus} Add option</button>`:''}</div>`;
+  return `<div class="beli-slider beli-score-slider"><span class="beli-score big ${scoreClass(q.answer)}" data-beli-score-badge="${q.id}">${Number(q.answer).toFixed(1)}</span><input type="range" min="0" max="10" step="0.1" value="${q.answer}" data-beli-range="${q.id}" aria-label="Correct score"><div class="beli-range-ends static"><span>0.0</span><span>10.0</span></div></div>`;
 }
 function mountBeliEditor(){
   const root=document.querySelector('.beli-editor');if(!root)return;
@@ -147,7 +147,7 @@ function mountBeliEditor(){
   });
   on(root,'change',e=>{
     const t=e.target;
-    if(t.dataset.beliReveal!==undefined){update(d=>{d.revealAnswers=t.checked;});t.closest('.beli-toggle').querySelector('small').textContent=revealHelp(beli());}
+    if(t.dataset.beliReveal!==undefined){update(d=>{d.revealAnswers=t.checked;});}
     if(t.dataset.beliMin||t.dataset.beliMax){const id=t.dataset.beliMin||t.dataset.beliMax;update(d=>{const item=q(d,id);if(t.dataset.beliMin)item.min=Math.min(+t.value,item.max-1);else item.max=Math.max(+t.value,item.min+1);item.answer=Math.min(item.max,Math.max(item.min,item.answer));});rerender();}
   });
   on(root,'click',e=>{
