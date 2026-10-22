@@ -2167,3 +2167,7 @@ code,kbd,samp,pre{font-family:var(--font-text)}
 .bow-l:before{content:'';position:absolute;left:50%;bottom:calc(100% - .3em);width:.78em;aspect-ratio:39/32;transform:translateX(-50%);background:url(assets/bow.svg) center/contain no-repeat;pointer-events:none}
 /* Seated on the l: knot on the stem, tilted so the left ribbon follows the serif's slope (no gap) */
 .bow-l:before{bottom:calc(100% - .37em);transform:translateX(-56%) rotate(-15deg);transform-origin:50% 85%}
+/* Bow, matched to the reference: upright, knot capping the l, tails falling over its top serif */
+.bow-l:before{width:.56em;bottom:calc(100% - .34em);transform:translateX(-46%)}
+/* Bow per the large reference: a touch larger and tilted ~12° clockwise around its knot, which caps the l */
+.bow-l:before{width:.7em;bottom:calc(100% - .385em);transform:translateX(-47%) rotate(12deg);transform-origin:50% 61%}
