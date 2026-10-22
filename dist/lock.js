@@ -60,10 +60,41 @@ function show(){
 function open(lock){
   const shell=document.querySelector('.app-shell');
   if(location.hash&&location.hash!=='#home')location.hash='home';
-  lock.classList.add('opening');shell.classList.add('is-opening');
-  const done=()=>{lock.remove();shell.classList.remove('is-locked','is-opening');document.getElementById('app')?.focus({preventScroll:true});};
-  if(matchMedia('(prefers-reduced-motion: reduce)').matches)return done();
-  setTimeout(done,560);
+  // Opening the app plays the Ribbon loading screen (Figma 236:408) over home, then fades it away.
+  shell.insertAdjacentHTML('beforeend',loaderMarkup());
+  const loader=document.getElementById('ribbon-loader');
+  lock.classList.add('opening');
+  setTimeout(()=>lock.remove(),560);
+  // The loader fades as home rises in underneath it.
+  const finish=()=>{if(!loader.isConnected)return;shell.classList.add('is-revealing');loader.classList.add('leaving');setTimeout(()=>{loader.remove();shell.classList.remove('is-locked','is-opening');document.getElementById('app')?.focus({preventScroll:true});},500);setTimeout(()=>shell.classList.remove('is-revealing'),900);setTimeout(traceHeroCard,700);};
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches){loader.classList.add('still');setTimeout(finish,900);return;}
+  loader.addEventListener('click',finish,{once:true});
+  setTimeout(finish,3500);
+}
+
+// Once home has settled, a hairline of light travels once around the occasion card, then fades away.
+function traceHeroCard(){const card=document.querySelector('.home-hero-card');if(!card||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  const ring=document.createElement('span');ring.className='hero-trace';ring.setAttribute('aria-hidden','true');card.appendChild(ring);
+  ring.addEventListener('animationend',e=>{if(e.animationName==='hero-trace-fade')ring.remove();});}
+
+/* The loading screen: 1 the bow draws along its path, 2 it shrinks and lifts as a box rises beneath it,
+   3 it bounces down onto the box, 4 the icon settles above the Ribbon wordmark, 5 the warm gradient rises. */
+function loaderMarkup(){
+  const loop='fill="none" stroke="white" stroke-width="4.4" pathLength="1"';
+  return `<div class="ribbon-loader" id="ribbon-loader" role="img" aria-label="Ribbon">
+<div class="rl-glow" aria-hidden="true"></div>
+<div class="rl-stage" aria-hidden="true">
+  <div class="rl-icon">
+    <div class="rl-box"><i class="t"></i><i class="b"></i><i class="l"></i><i class="r"></i></div>
+    <svg class="rl-bow" viewBox="0 0 39 32" overflow="visible">
+      <path class="rl-loop a" ${loop} d="M19.058 19.5761C20.9064 18.0174 11.0997 2.56474 5.82048 8.23362C0.541201 13.9025 17.2092 21.1349 19.058 19.5761Z"/>
+      <path class="rl-loop b" ${loop} d="M19.5631 19.5761C17.7147 18.0174 27.5213 2.56474 32.8006 8.23362C38.0799 13.9025 21.4119 21.1349 19.5631 19.5761Z"/>
+      <path class="rl-tail a" ${loop} stroke-linecap="round" d="M20.34 19.07L10.03 25.43"/>
+      <path class="rl-tail b" ${loop} stroke-linecap="round" d="M18.31 18.78L29.34 25.72"/>
+    </svg>
+  </div>
+  <p class="rl-word">Ribbon</p>
+</div></div>`;
 }
 
 const start=()=>{if(!location.hash||location.hash==='#home')show();};

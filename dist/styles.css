@@ -2258,3 +2258,92 @@ code,kbd,samp,pre{font-family:var(--font-text)}
 .cm-shot{position:absolute;inset:0;filter:brightness(.8)}
 .cm-top,.cm-bottom{position:absolute;left:4px;right:4px;font:400 12px/1 var(--font-text);color:#fff;text-align:center;text-transform:uppercase;letter-spacing:-.02em;white-space:nowrap;overflow:hidden;text-shadow:0 1px 3px #000c}
 .cm-top{top:6px}.cm-bottom{bottom:6px}
+
+/* =====================================================================
+   Ribbon loading screen (Figma 236:408), played as the app opens from the notification.
+   Positions are offsets from the screen centre, taken from the 393×852 frames.
+   ===================================================================== */
+.ribbon-loader{position:absolute;inset:0;z-index:99;overflow:hidden;border-radius:inherit;background:#0b0400;transition:opacity .5s ease;cursor:pointer}
+.ribbon-loader.leaving{opacity:0;pointer-events:none}
+.rl-glow{position:absolute;left:50%;top:50%;width:1669px;height:699px;margin:-349.5px 0 0 -834.5px;border-radius:50%;
+  background:radial-gradient(closest-side at 46% 52%,#ffdeaa 0%,#ff9a52 40%,#ff3406 100%);filter:blur(150px);
+  transform:translate(577px,852px) rotate(160.27deg);animation:rl-glow 1s cubic-bezier(.2,.8,.2,1) 2.75s forwards}
+.rl-stage{position:absolute;left:50%;top:50%;width:0;height:0}
+.rl-icon{position:absolute;left:0;top:0;width:0;height:0;animation:rl-icon .6s cubic-bezier(.2,.8,.2,1) 2.75s forwards}
+.rl-box{position:absolute;left:-42.5px;top:-42.5px;width:85px;height:85px;box-sizing:border-box;border:5.8px solid #fff;border-radius:19.3px;opacity:0;transform:translateY(87px);
+  animation:rl-box 1.95s cubic-bezier(.2,.8,.2,1) forwards}
+.rl-box i{position:absolute;background:#fff}
+.rl-box .t{left:calc(50% - 3.9px - 2.9px);top:-5.8px;width:5.8px;height:25px}
+.rl-box .b{left:calc(50% - 3.9px - 2.9px);bottom:-5.8px;width:5.8px;height:23px}
+.rl-box .l{left:-5.8px;top:calc(50% + 5.8px - 2.9px);width:19.3px;height:5.8px}
+.rl-box .r{right:-5.8px;top:calc(50% + 5.8px - 2.9px);width:19.3px;height:5.8px}
+/* The bow is placed by its knot (49.5% across, 59.4% down its 39×32 box) and drawn along its path */
+.rl-bow{position:absolute;width:59px;height:48.4px;left:-29.2px;top:-28.75px;overflow:visible;transform-origin:49.5% 59.4%;
+  transform:translate(0,8px) scale(1.7);animation:rl-bow 2.6s linear forwards}
+.rl-loop,.rl-tail{stroke-dasharray:1;stroke-dashoffset:1;animation:rl-draw .5s cubic-bezier(.5,0,.3,1) forwards}
+.rl-loop.a{animation-delay:.15s}.rl-loop.b{animation-delay:.45s}
+.rl-tail.a{animation-duration:.3s;animation-delay:.85s}.rl-tail.b{animation-duration:.3s;animation-delay:1s}
+.rl-word{position:absolute;left:-143.5px;top:-11.5px;width:287px;margin:0;text-align:center;color:#fff;font:400 64px/1.5 var(--font-display);letter-spacing:-.704px;
+  opacity:0;transform:translateY(101px);animation:rl-word .6s cubic-bezier(.2,.8,.2,1) 2.85s forwards}
+@keyframes rl-draw{to{stroke-dashoffset:0}}
+@keyframes rl-box{0%,69%{opacity:0;transform:translateY(87px)}100%{opacity:1;transform:none}}
+@keyframes rl-bow{
+  0%,52%{transform:translate(0,8px) scale(1.7);animation-timing-function:cubic-bezier(.2,.8,.2,1)}
+  75%,77%{transform:translate(-3.5px,-66px) scale(1);animation-timing-function:cubic-bezier(.55,0,.9,.4)}
+  88%{transform:translate(-3.5px,9px) scale(1);animation-timing-function:cubic-bezier(.1,.6,.4,1)}
+  94%{transform:translate(-3.5px,1px) scale(1);animation-timing-function:cubic-bezier(.5,0,.5,1)}
+  100%{transform:translate(-3.5px,6px) scale(1)}}
+@keyframes rl-icon{to{transform:translateY(-52.5px) scale(.518)}}
+@keyframes rl-word{to{opacity:1;transform:none}}
+@keyframes rl-glow{to{transform:translate(577px,287px) rotate(160.27deg)}}
+/* Reduced motion: show the finished screen briefly instead */
+.ribbon-loader.still *{animation:none!important}
+.ribbon-loader.still .rl-loop,.ribbon-loader.still .rl-tail{stroke-dashoffset:0}
+.ribbon-loader.still .rl-box{opacity:1;transform:none}
+.ribbon-loader.still .rl-bow{transform:translate(-3.5px,6px)}
+.ribbon-loader.still .rl-icon{transform:translateY(-52.5px) scale(.518)}
+.ribbon-loader.still .rl-word{opacity:1;transform:none}
+.ribbon-loader.still .rl-glow{transform:translate(577px,287px) rotate(160.27deg)}
+/* After the loader: home rises and settles into place as the loader fades */
+.app-shell.is-revealing #app,.app-shell.is-revealing #nav{animation:home-reveal .85s cubic-bezier(.2,.8,.2,1) both}
+.app-shell.is-revealing #app .home-title,.app-shell.is-revealing #app .home-hero-card{animation:home-reveal-item .9s cubic-bezier(.2,.8,.2,1) both}
+.app-shell.is-revealing #app .home-hero-card{animation-delay:.08s}
+@keyframes home-reveal{from{opacity:0;transform:translateY(28px) scale(.97)}to{opacity:1;transform:none}}
+@keyframes home-reveal-item{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.app-shell.is-revealing #app,.app-shell.is-revealing #nav,.app-shell.is-revealing #app *{animation:none!important}}
+.app-shell.is-locked.is-revealing #nav{visibility:visible}
+/* Loader icon: ticks centred and all the same length; the bow lands with its visual centre on the box centre
+   (its knot sits 3.3px below that centre at this size) */
+.rl-box .t,.rl-box .b{left:calc(50% - 2.9px);width:5.8px;height:21px}
+.rl-box .l,.rl-box .r{top:calc(50% - 2.9px);height:5.8px;width:21px}
+@keyframes rl-bow{
+  0%,52%{transform:translate(0,8px) scale(1.7);animation-timing-function:cubic-bezier(.2,.8,.2,1)}
+  75%,77%{transform:translate(0,-66px) scale(1);animation-timing-function:cubic-bezier(.55,0,.9,.4)}
+  88%{transform:translate(0,9px) scale(1);animation-timing-function:cubic-bezier(.1,.6,.4,1)}
+  94%{transform:translate(0,.5px) scale(1);animation-timing-function:cubic-bezier(.5,0,.5,1)}
+  100%{transform:translate(0,4px) scale(1)}}
+.ribbon-loader.still .rl-bow{transform:translate(0,4px)}
+/* Loader timing, tightened: draw → lift → drop runs continuously, and the wordmark/glow come in as the bow lands */
+.rl-loop.b{animation-delay:.4s}.rl-tail.a{animation-delay:.7s}.rl-tail.b{animation-delay:.85s}
+.rl-box{animation:rl-box 1.6s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes rl-box{0%,72%{opacity:0;transform:translateY(87px)}100%{opacity:1;transform:none}}
+.rl-bow{animation:rl-bow 2.15s linear forwards}
+@keyframes rl-bow{
+  0%,53.5%{transform:translate(0,8px) scale(1.7);animation-timing-function:cubic-bezier(.3,.7,.4,1)}
+  74.4%{transform:translate(0,-66px) scale(1);animation-timing-function:cubic-bezier(.55,0,.9,.45)}
+  88%{transform:translate(0,9px) scale(1);animation-timing-function:cubic-bezier(.1,.6,.4,1)}
+  94%{transform:translate(0,.5px) scale(1);animation-timing-function:cubic-bezier(.5,0,.5,1)}
+  100%{transform:translate(0,4px) scale(1)}}
+.rl-icon{animation-delay:1.95s}
+.rl-word{animation-delay:2s}
+.rl-glow{animation-delay:1.95s}
+
+/* A single pass of light around the occasion card: a 1px hairline masked to the card's shape, lit by a short
+   arc that fades to transparent at both ends, travelling once around and then fading out */
+@property --trace{syntax:'<angle>';inherits:false;initial-value:0deg}
+.hero-trace{position:absolute;inset:0;z-index:3;border-radius:inherit;padding:1px;pointer-events:none;
+  background:conic-gradient(from var(--trace),transparent 0deg,rgba(255,255,255,0) 10deg,#fff 60deg,rgba(255,255,255,0) 110deg,transparent 360deg);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);
+  animation:hero-trace 1.8s cubic-bezier(.45,.05,.4,1) forwards,hero-trace-fade .35s ease-out 1.6s forwards}
+@keyframes hero-trace{from{--trace:-90deg}to{--trace:270deg}}
+@keyframes hero-trace-fade{to{opacity:0}}
