@@ -2196,3 +2196,12 @@ code,kbd,samp,pre{font-family:var(--font-text)}
 .intake-text-field>span{display:block;text-align:center}
 /* Quiz pills: optically centred text (Neue Haas sits high in its line box, so nudge it down) */
 .intake-chip{display:inline-flex;align-items:center;justify-content:center;line-height:1;padding:13.5px 16px 10.5px}
+
+/* Gift screen quiz preview: the same circular orange glow as the quiz itself */
+.gift-preview-quiz{background:radial-gradient(circle 190px at 50% 70px,#d88e58 0%,#d27a38 8%,#c26222 18%,#a84a12 28%,#84360a 38%,#5c2507 48%,#391604 58%,#1e0b03 70%,#0c0402 84%,#060201 100%)}
+
+/* Occasion tiles: the card-blur treatment (a softly blurred photo, like the home idea cards) */
+.intake-tiles .intake-tile:not(.intake-tile-own){background:#3a1a0c!important;background-blend-mode:normal!important}
+.intake-tiles .intake-tile:not(.intake-tile-own):before{inset:-40px;opacity:1;mix-blend-mode:normal;filter:blur(18px) saturate(1.4) brightness(1.06);background:var(--occ) center/cover no-repeat!important}
+.intake-tiles .intake-tile:not(.intake-tile-own):after{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;background:linear-gradient(180deg,rgba(20,8,3,0) 45%,rgba(20,8,3,.35) 100%)}
+.intake-tiles .intake-tile .intake-tile-label,.intake-tiles .intake-tile .intake-check{position:relative;z-index:1}
