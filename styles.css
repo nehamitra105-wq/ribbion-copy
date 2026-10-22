@@ -2223,3 +2223,8 @@ code,kbd,samp,pre{font-family:var(--font-text)}
 .cap-toolbar button{min-width:0;flex:1}
 .cap-widget-actions{margin-top:14px}.cap-widget-actions .cap-primary{margin-top:0}.cap-widget-actions .cap-ghost{min-height:50px}
 .jeo-actions .jeo-primary{width:auto;flex:1;min-width:180px}
+
+/* No focus rings or click outlines anywhere (per design): drop outlines on focus and the gold selected outline */
+*:focus,*:focus-visible,*:focus-within{outline:none!important}
+:has(> input:focus-visible),:has(> input:focus){outline:none!important}
+.jeo-value.active{outline:none!important}
