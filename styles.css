@@ -2200,8 +2200,14 @@ code,kbd,samp,pre{font-family:var(--font-text)}
 /* Gift screen quiz preview: the same circular orange glow as the quiz itself */
 .gift-preview-quiz{background:radial-gradient(circle 190px at 50% 70px,#d88e58 0%,#d27a38 8%,#c26222 18%,#a84a12 28%,#84360a 38%,#5c2507 48%,#391604 58%,#1e0b03 70%,#0c0402 84%,#060201 100%)}
 
-/* Occasion tiles: the card-blur treatment (a softly blurred photo, like the home idea cards) */
-.intake-tiles .intake-tile:not(.intake-tile-own){background:#3a1a0c!important;background-blend-mode:normal!important}
-.intake-tiles .intake-tile:not(.intake-tile-own):before{inset:-40px;opacity:1;mix-blend-mode:normal;filter:blur(18px) saturate(1.4) brightness(1.06);background:var(--occ) center/cover no-repeat!important}
-.intake-tiles .intake-tile:not(.intake-tile-own):after{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;background:linear-gradient(180deg,rgba(20,8,3,0) 45%,rgba(20,8,3,.35) 100%)}
-.intake-tiles .intake-tile .intake-tile-label,.intake-tiles .intake-tile .intake-check{position:relative;z-index:1}
+
+/* Occasion tiles: the screened-photo treatment. The occasion photo with an orange screen over it, darker toward
+   the bottom-left behind the label, a warm light coming in from the right, and a couple of faint, blurred glares */
+.intake-tiles .intake-tile:not(.intake-tile-own){
+  background:radial-gradient(160px 110px at 0 100%,rgba(28,8,2,.78),rgba(28,8,2,0)),linear-gradient(180deg,rgba(40,13,4,.12) 0%,rgba(40,13,4,.22) 50%,rgba(34,10,3,.5) 100%),linear-gradient(160deg,#c9561c 0%,#b8461a 55%,#9a3912 100%),var(--occ) center/cover no-repeat!important;
+  background-blend-mode:normal,normal,screen,normal!important}
+.intake-tiles .intake-tile:not(.intake-tile-own):before{inset:0;opacity:.55;mix-blend-mode:screen;filter:none;
+  background:radial-gradient(60% 85% at 100% 40%,rgba(255,206,160,.8) 0%,rgba(255,170,110,.25) 50%,rgba(255,170,110,0) 100%)!important}
+.intake-tiles .intake-tile:not(.intake-tile-own):after{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;border-radius:inherit;
+  background:url(assets/warm/glare-star-1.png) no-repeat right -26px top -30px/86px auto,url(assets/warm/glare-star-2.png) no-repeat left -14px bottom -16px/46px auto;
+  filter:blur(14px) hue-rotate(-22deg) saturate(.85) brightness(1.08);opacity:.5}
