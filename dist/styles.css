@@ -2185,3 +2185,5 @@ code,kbd,samp,pre{font-family:var(--font-text)}
 .cap-playhead{left:76px;margin-left:0}
 /* Daily / Monthly / Yearly capsule screens: the title is a header, in Advercase, on the back arrow's row */
 .cap-widget-title{margin:0;text-align:center;font:400 var(--type-hero)/1.3 var(--font-display);letter-spacing:var(--tracking);color:#fff;white-space:nowrap}
+/* Mini capsules: more room between the art and the name */
+.cap-mini strong{margin-top:8px}
