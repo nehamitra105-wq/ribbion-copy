@@ -2171,3 +2171,17 @@ code,kbd,samp,pre{font-family:var(--font-text)}
 .bow-l:before{width:.56em;bottom:calc(100% - .34em);transform:translateX(-46%)}
 /* Bow per the large reference: a touch larger and tilted ~12° clockwise around its knot, which caps the l */
 .bow-l:before{width:.7em;bottom:calc(100% - .385em);transform:translateX(-47%) rotate(12deg);transform-origin:50% 61%}
+/* Capsule editor toolbar: no white discs, just white line icons */
+.cap-toolbar span{background:none;color:#fff;width:36px;height:36px}
+.cap-toolbar svg{width:22px;height:22px;stroke:currentColor}
+/* Capsule editor header: title centred between equal side columns, a smaller "draft" tag */
+.cap-top{grid-template-columns:72px minmax(0,1fr) 72px;padding-top:68px}
+.cap-top>.cap-seal{justify-self:end}
+.cap-title h1 span{font-size:.62em;margin-left:2px}
+.cap-top{grid-template-columns:64px minmax(0,1fr) 64px;gap:6px}
+.cap-title h1{font-size:22px;line-height:1.2}
+.cap-title h1 span{display:block;margin:2px 0 0;font:400 12px/1.3 var(--font-text);letter-spacing:.02em;opacity:.6}
+/* Capsule timeline: playhead at the track's left edge, so clips line up with "Add a song" */
+.cap-playhead{left:76px;margin-left:0}
+/* Daily / Monthly / Yearly capsule screens: the title is a header, in Advercase, on the back arrow's row */
+.cap-widget-title{margin:0;text-align:center;font:400 var(--type-hero)/1.3 var(--font-display);letter-spacing:var(--tracking);color:#fff;white-space:nowrap}

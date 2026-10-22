@@ -99,14 +99,13 @@ function mountSetup(c,bind){ctx=c;const form=document.querySelector('[data-cap-s
 /* ---------------- Editor (Figma 61:1177) ---------------- */
 function editorMarkup(c){ctx=c;cap=load();
 return `<section class="screen cap-screen cap-editor">${backdrop()}
-<header class="cap-top"><button class="icon-button" data-go="capsuleSetup" aria-label="Back to capsule details">${c.icon('back')}</button><div class="cap-title"><h1>${esc(cap.title)} <span>draft</span></h1><small>${I.lock} Opens ${dateLabel(cap.openDate)}</small></div><button class="cap-seal" data-go="capsuleSeal">Seal</button></header>
+<header class="cap-top"><button class="icon-button" data-go="capsuleSetup" aria-label="Back to capsule details">${c.icon('back')}</button><div class="cap-title"><h1>${esc(cap.title)} <span>draft</span></h1></div><button class="cap-seal" data-go="capsuleSeal">Seal</button></header>
 <button class="cap-preview" data-cap-full aria-label="Expand preview to full screen">${stageHTML()}<span class="cap-expand">${I.expand}</span></button>
 <div class="cap-transport"><button class="cap-play" data-cap-play aria-label="Play">${I.play}</button><div class="cap-scrub" id="cap-scrub" role="slider" tabindex="0" aria-label="Scrub" aria-valuemin="0"><i id="cap-scrub-fill"></i></div><span class="cap-time" id="cap-time">00:00</span></div>
 <div class="cap-tracks">
 <div class="cap-row"><button class="cap-add" data-cap-tool="clip" aria-label="Add clips">${I.plus}</button><div class="cap-track" id="cap-track" aria-label="Clip timeline. Scroll to scrub, hold to cut or delete."><div class="cap-strip" id="cap-strip"></div></div><span class="cap-playhead" aria-hidden="true"><b></b></span></div>
 <div class="cap-row"><button class="cap-disc ${cap.song?'has-song':''}" data-cap-tool="song" aria-label="${cap.song?'Change song':'Add a song'}"><span></span></button><button class="cap-audio" data-cap-tool="song" id="cap-audio">${audioLabel()}</button></div>
 </div>
-<p class="cap-hint" id="cap-hint">Hold the timeline to cut or delete a clip</p>
 <nav class="cap-toolbar" aria-label="Editing tools">${[['clip','Clip',I.plus],['text','Text',I.text],['cut','Cut',I.cut],['delete','Delete',I.trash],['undo','Undo',I.undo]].map(([k,l,svg])=>`<button data-cap-tool="${k}"><span>${svg}</span><small>${l}</small></button>`).join('')}</nav>
 <div class="cap-menu" id="cap-menu" role="menu" hidden><button data-cap-menu="cut" role="menuitem">${I.cut} Cut here</button><button data-cap-menu="delete" role="menuitem">${I.trash} Delete clip</button><button data-cap-menu="cancel" role="menuitem">Cancel</button></div>
 <div class="cap-full" id="cap-full" hidden><button class="cap-full-close" data-cap-close aria-label="Close full screen preview">${c.icon('close')}</button>${stageHTML('full')}<div class="cap-full-bar"><i id="cap-full-fill"></i></div></div>
@@ -122,7 +121,9 @@ function mountEditor(c,bind){
   const root=document.querySelector('.cap-editor');if(!root)return;
   const track=document.getElementById('cap-track'),strip=document.getElementById('cap-strip');
   const redraw=()=>{strip.innerHTML=stripHTML();layoutStrip();setTime(Math.min(t,total()-.01),true);};
-  const layoutStrip=()=>{const pad=track.clientWidth/2;strip.style.paddingLeft=strip.style.paddingRight=`${pad}px`;};
+  // Clips start flush with the track's left edge (lined up with the song row); the playhead sits there too,
+  // and the trailing padding lets the last clip scroll all the way to it.
+  const layoutStrip=()=>{strip.style.paddingLeft='0px';strip.style.paddingRight=`${track.clientWidth}px`;};
   layoutStrip();strip.innerHTML=stripHTML();
   bind(window,'resize',layoutStrip);
   bind(track,'scroll',()=>{if(playing||Math.abs(track.scrollLeft-t*PX)<1.5)return;t=Math.min(total()-.001,track.scrollLeft/PX);render(true);});
@@ -249,7 +250,7 @@ const WIDGETS={
 };
 function widgetMarkup(name){return c=>{ctx=c;const w=WIDGETS[name],saved=store.get(`ribbon-${name}-v1-${c.person}`,null),items=saved||w.items;
 return `<section class="screen cap-screen cap-widget-screen">${backdrop('m05')}
-<header class="tpl-top"><button class="icon-button" data-go="capsuleTemplates" aria-label="Back">${c.icon('back')}</button><span class="cap-eyebrow">${w.label}</span><span class="tpl-spacer"></span></header>
+<header class="tpl-top"><button class="icon-button" data-go="capsuleTemplates" aria-label="Back">${c.icon('back')}</button><h1 class="cap-widget-title">${w.label}</h1><span class="tpl-spacer"></span></header>
 <div class="cap-phone" aria-label="Widget preview on ${esc(c.person)}’s home screen"><div class="cap-phone-apps" aria-hidden="true">${'<i></i>'.repeat(8)}</div><div class="cap-widget" id="cap-widget">${w.widget(items)}</div><div class="cap-phone-apps" aria-hidden="true">${'<i></i>'.repeat(4)}</div></div>
 <div class="cap-widget-form"><h1>${w.title}</h1><p>${w.when} on ${esc(c.person)}’s home screen. Edit what they’ll see.</p>
 <ol class="cap-entries" id="cap-entries">${items.map((x,i)=>`<li><textarea rows="1" data-cap-entry="${i}" aria-label="Entry ${i+1}">${esc(x)}</textarea></li>`).join('')}</ol>
