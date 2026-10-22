@@ -2194,3 +2194,5 @@ code,kbd,samp,pre{font-family:var(--font-text)}
 .intake-tiles .intake-tile:not(.intake-tile-own):before{opacity:.32}
 .intake-chips{justify-content:center;width:100%}
 .intake-text-field>span{display:block;text-align:center}
+/* Quiz pills: optically centred text (Neue Haas sits high in its line box, so nudge it down) */
+.intake-chip{display:inline-flex;align-items:center;justify-content:center;line-height:1;padding:13.5px 16px 10.5px}
