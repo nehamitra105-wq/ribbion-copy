@@ -2161,3 +2161,9 @@ code,kbd,samp,pre{font-family:var(--font-text)}
 .web-top{padding-top:65px}
 /* Viewer fan: each photo card keeps the photo's own shape; landscape cards run wider */
 .iv-card.wide{width:min(82%,310px);margin-left:calc(min(82%,310px) / -2)}
+
+/* The bow from Figma 210:118 perched on the "l" of "memorable" */
+.bow-l{position:relative;display:inline-block}
+.bow-l:before{content:'';position:absolute;left:50%;bottom:calc(100% - .3em);width:.78em;aspect-ratio:39/32;transform:translateX(-50%);background:url(assets/bow.svg) center/contain no-repeat;pointer-events:none}
+/* Seated on the l: knot on the stem, tilted so the left ribbon follows the serif's slope (no gap) */
+.bow-l:before{bottom:calc(100% - .37em);transform:translateX(-56%) rotate(-15deg);transform-origin:50% 85%}
