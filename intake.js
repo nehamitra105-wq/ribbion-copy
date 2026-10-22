@@ -7,7 +7,7 @@ const RELATIVE={su24:'2 years ago',fa24:'2 years ago',wi25:'Last year',sp25:'Las
 const FAVORITES=['Burgers on road trips','Chasing sunsets','Late nights on the Lower East Side','Subway antics','Spicy Village noodles','Field dances','Mirror selfies','Sleepovers and face masks','Thai Diner','The Catskills','Golden hour walks','Hanging off the train pole','London trips','Kitchen dance parties'];
 const QUESTIONS=[
   {id:'format',title:'What kind of gift are you making?',type:'cards',options:[['storybook','A storybook','Chapters of your moments, in your words'],['trivia','Trivia','How well do they know your story?'],['capsule','A time capsule','Something for them to open later'],['unsure','I don’t know yet','Answer the rest and we’ll suggest one']]},
-  {id:'occasion',title:'What’s the occasion, really?',type:'tiles',options:['Their birthday','Graduation','Moving away','Just because','Saying sorry','Our friendiversary']},
+  {id:'occasion',title:'What’s the occasion, really?',type:'tiles',options:['Their birthday','Graduation','Moving away','Just because','Saying sorry','Friendiversary']},
   {id:'favorites',title:'Any obsessions, favorites or notable things {person} loves?',type:'favorites',multi:true,options:FAVORITES},
   {id:'scope',title:'Is this a personal moment or a shared one?',type:'cards',options:[['personal','Just the two of us','A one-on-one moment between you'],['group','Shared with a group','Friends can be part of it too']]},
   {id:'reminds',title:'What reminds you of them most?',type:'photos',multi:true,pull:['m04','m12','m07','m16']},
