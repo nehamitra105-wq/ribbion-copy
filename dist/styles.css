@@ -2347,3 +2347,7 @@ code,kbd,samp,pre{font-family:var(--font-text)}
   animation:hero-trace 1.8s cubic-bezier(.45,.05,.4,1) forwards,hero-trace-fade .35s ease-out 1.6s forwards}
 @keyframes hero-trace{from{--trace:-90deg}to{--trace:270deg}}
 @keyframes hero-trace-fade{to{opacity:0}}
+
+/* Nav sits on the same 20px side gutter as the home content. */
+#nav{margin-left:20px;margin-right:20px}
+@media (min-width:481px){#nav{left:20px;right:20px;margin:0}}
